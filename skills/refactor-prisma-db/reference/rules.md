@@ -25,9 +25,15 @@ Fix: remove it (`derive_away`). If R16 applies, it is a snapshot instead.
 
 Fix: merge into the more-referenced model, dedupe on the natural key, record IDs in
 `MigrationIdMap`. Overlap with unclear meaning → ambiguity, no merge.
+A pair with ≥70% field overlap that fails the identity test (no shared natural-key values) is
+still an open question, not a clean result: two models that look the same may be one concept
+split by population, or two concepts. Keep both and log an ambiguity naming both models.
 
 **R6 Unneeded 1:1 split.** A model with a required unique FK to a parent and no other relations →
 merge into the parent. Keep the split when it holds large blobs/JSON or credentials/secrets.
+The exceptions are exhaustive. "Credentials/secrets" means authentication material (password
+hashes, tokens, keys, MFA secrets). Ordinary attributes of the parent, including personal
+data, are not secrets: merge them.
 
 **R7 Declared relations.** An id-like scalar (`<model>Id` whose values are mostly ids of that model)
 must be a `@relation` with explicit `onDelete`: `Restrict` by default, `Cascade` only for
@@ -55,6 +61,9 @@ type.
 **R12 Required when always present.** An optional field with 0% nulls whose meaning implies presence
 (names, foreign keys of owned children, timestamps, amounts) → required.
 Never make a field required if any row is null.
+When the field is one of these kinds and has 0% nulls, apply the fix; do not turn it into an
+ambiguity because some future row might hypothetically lack a value. The evidence is the data.
+Fields of other kinds (free-text notes, optional descriptions, contact data) stay optional.
 
 **R13 Natural uniqueness.** Candidate keys (email, sku, code, number, slug, external ids) with 0
 duplicates → `@unique`. Duplicates that are exact copies (all non-PK fields equal) → keep the
@@ -73,6 +82,9 @@ Signals:
 - some rows differ from the current source value.
 
 Keep the field, add a doc comment `/// @snapshot: <reason>`, and log it in `decisions.yaml`.
+This covers every value of that kind on such a record: copied names, addresses and prices, and
+also totals or other aggregates stored on it. When you identify a record as a dated document,
+go through all of its fields and document each copied or aggregated one.
 
 **R17 Derived values.** Values fully computable from other data on mutable records (cached counts,
 cached totals) → remove (`derive_away` with `derivable_from`). On historical documents → R16.

@@ -150,7 +150,7 @@ async function runWithClaude(): Promise<never> {
       '--append-system-prompt', SANDBOX_NOTE,
     ]
     if (process.env.CLAUDE_MODEL) cliArgs.push('--model', process.env.CLAUDE_MODEL)
-    log(`run ${runId}: claude ${cliArgs.filter((a) => a !== SANDBOX_NOTE).map((a) => (/\s/.test(a) ? JSON.stringify(a) : a)).join(' ')} --append-system-prompt <SANDBOX_NOTE>  (cwd ${project})`)
+    log(`run ${runId}: claude ${cliArgs.map((a) => (a === SANDBOX_NOTE ? '<SANDBOX_NOTE>' : /\s/.test(a) ? JSON.stringify(a) : a)).join(' ')}  (cwd ${project})`)
     const t0 = Date.now()
     const r = spawnSync('claude', cliArgs, { cwd: project, env: claudeEnv(scratchUrl), encoding: 'utf8', timeout: CLAUDE_TIMEOUT_MS, maxBuffer: 256 * 1024 * 1024, killSignal: 'SIGTERM' })
     writeFileSync(join(runDir, 'claude.json'), r.stdout ?? '')

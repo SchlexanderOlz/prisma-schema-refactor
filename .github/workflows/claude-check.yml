@@ -263,8 +263,17 @@ jobs:
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
-          prompt='Format report.json (on stdin) as a concise GitHub PR comment: verdict line first, verbatim; then the gates table with per-run ✅/❌; then the metrics table (value, min, baseline, delta, status); cost; then the top failing cases grouped by rule. Do not change, round or omit any number. Do not add judgments. Output only the comment markdown.'
-          timeout 600 claude -p "$prompt" --tools "" --max-turns 2 --output-format text --no-session-persistence < report/report.json > comment.md
+          prompt='Format report.json (on stdin) as a concise GitHub PR comment in markdown. Structure, in this order: (1) first line exactly "**Verdict: <verdict>**" using the verdict verbatim, then the reasons as bullets; (2) a gates table whose header is exactly "| Gate | run 1 | ... | run N |" (one column per run, no other columns) with ✅ for pass, ❌ for fail and ⏸️ for blocked; (3) a metrics table "| Metric | Value | Min | Baseline | Delta | Status |", writing – for null; (4) one cost line with every number from "cost"; (5) the top failing cases grouped by rule. Do not change, round or omit any number. Do not add judgments. Output only the comment markdown.'
+          set +e
+          timeout 600 claude -p "$prompt" --tools "" --max-turns 2 --output-format text --no-session-persistence < report/report.json > comment.md 2> claude.err
+          code=$?
+          echo "claude exit code: $code"
+          if [ "$code" -ne 0 ]; then
+            echo "--- stderr"; head -c 2000 claude.err
+            echo "--- stdout"; head -c 2000 comment.md
+            rm -f comment.md
+          fi
+          exit 0
       - name: Verify Claude kept every number; otherwise post report.md raw
         run: |
           if [ -s comment.md ] && node --disable-warning=ExperimentalWarning tests/verify-comment.ts report/report.json comment.md; then

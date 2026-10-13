@@ -158,7 +158,15 @@ async function runWithClaude(): Promise<never> {
     let crashed: string | undefined
     if (r.error && (r.error as NodeJS.ErrnoException).code === 'ETIMEDOUT') crashed = `timeout after ${Math.round((Date.now() - t0) / 60000)} min`
     else if (r.error) crashed = `could not start claude: ${r.error.message}`
-    else if (r.status !== 0) crashed = `claude exited with ${r.status}${r.signal ? ` (${r.signal})` : ''}`
+    else if (r.status !== 0) {
+      let why = ''
+      try {
+        why = String(JSON.parse((r.stdout ?? '').trim()).result ?? '').slice(0, 200)
+      } catch {
+        why = (r.stderr ?? '').trim().split('\n').pop()?.slice(0, 200) ?? ''
+      }
+      crashed = `claude exited with ${r.status}${r.signal ? ` (${r.signal})` : ''}${why ? `: ${why}` : ''}`
+    }
     else {
       try {
         const j = JSON.parse((r.stdout ?? '').trim())

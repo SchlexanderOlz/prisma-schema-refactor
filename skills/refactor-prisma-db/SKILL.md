@@ -1,0 +1,63 @@
+---
+name: refactor-prisma-db
+description: Designs a normalized target for an existing Prisma + PostgreSQL schema and produces schema.prisma, mapping.yaml, decisions.yaml and a data-preserving migration. Use when asked to clean up, normalize, consolidate or refactor a Prisma database schema. Never applies anything to a real database.
+---
+
+# Refactor a Prisma schema
+
+## Inputs
+Invoked as `/refactor-prisma-db [--project <dir>] [--out <dir>]`.
+- `--project`: directory with `schema.prisma` and `migrations/`. Default: the single `prisma/`
+  directory in the working tree; if there are several, ask.
+- `--out`: output directory. Default: `./refactor-out`.
+- `SCRATCH_DATABASE_URL` (env): a disposable PostgreSQL copy that already holds the current
+  schema and data. It is the ONLY database you may connect to.
+  - Missing → stop and ask.
+  - Equal to the project's `DATABASE_URL`, or host not localhost/127.0.0.1 and the user
+    hasn't confirmed it is a copy → stop and ask.
+
+## Hard rules
+1. Write only inside `--out`. Never edit the project, its schema, its migrations or anything else.
+2. Default is KEEP. A model or field changes only if it violates a rule in `reference/rules.md`
+   and you can name the rule ID and the evidence (schema or profile). Never change a correct
+   model for style, taste, or consistency with your other changes.
+3. Every source model and every source scalar field appears exactly once in `mapping.yaml`.
+   Nothing disappears without a mapping entry and a reason.
+4. Never remove a snapshot (rule R16). If you are unsure whether duplication is a snapshot,
+   treat it as one and log it.
+5. If the right answer depends on business meaning that schema and data cannot establish,
+   do not decide. Keep the safe default (see "Ambiguity" in rules.md) and log an ambiguity.
+   A logged question is a correct outcome; a confident guess is not.
+6. Rows that cannot be migrated (orphans, losing duplicates, unparseable values) go to
+   `QuarantinedRow` with a reason. Never drop them silently, never invent values.
+7. Never drop a model or field because nothing seems to use it. Log it as an ambiguity.
+
+## Procedure
+1. **Setup.** Read all three files in `reference/`. Install script deps once:
+   `npm --prefix <skill-dir>/scripts ci --silent`.
+2. **Profile.** Run
+   `node <skill-dir>/scripts/profile.mjs --schema <project>/schema.prisma --out <out>/.work/profile.json`
+   and read the result.
+3. **Findings.** Write one line per model to `<out>/.work/findings.md`:
+   `Model — clean` or `Model — R<n>: <evidence>`. In real schemas most models are clean;
+   expect that, and treat a long findings list as a sign you are over-reaching.
+4. **Design.** For each finding apply the fix from rules.md.
+   - Check ripple effects: relations to merged or renamed models.
+   - Write `<out>/schema.prisma`: start from a copy of the source schema and change only what
+     findings require.
+   - Add the two support models from output-contract.md.
+5. **Contract files.** Write `<out>/mapping.yaml` and `<out>/decisions.yaml` exactly as
+   output-contract.md specifies.
+6. **Migration.** Follow migration-playbook.md and produce
+   `<out>/migrations/<UTC timestamp>_refactor/migration.sql`.
+7. **Self-check** on the scratch DB. Loop until clean, max 3 iterations, then report what is left.
+   - `node <skill-dir>/scripts/check-output.mjs --project <project> --out <out>`
+   - `npx prisma validate` on `<out>/schema.prisma`
+   - Copy the source migrations plus the new one into `<out>/.work/apply/migrations`, deploy
+     them to the scratch DB, then run a drift check (migrations vs `<out>/schema.prisma`
+     must be empty).
+   - Run the reconciliation query from migration-playbook.md.
+
+   The scratch DB is now migrated. Say that it must be re-created before another run.
+8. **Summary.** Print counts: models clean/changed/merged/new, fields moved, rows quarantined,
+   ambiguities, snapshots. Then list every ambiguity as a question for the user.

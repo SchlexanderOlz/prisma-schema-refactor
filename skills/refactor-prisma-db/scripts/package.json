@@ -1,0 +1,15 @@
+{
+  "name": "refactor-prisma-db-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Helper scripts for the refactor-prisma-db skill (profiling and output validation).",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@mrleebo/prisma-ast": "0.16.0",
+    "pg": "8.16.3",
+    "yaml": "2.8.1",
+    "zod": "4.1.12"
+  }
+}

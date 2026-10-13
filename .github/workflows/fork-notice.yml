@@ -1,0 +1,34 @@
+name: fork-notice
+
+# `pull_request` workflows from forks get a read-only token, so claude-check cannot comment
+# on fork PRs itself. This workflow runs in the base repo after claude-check finishes and only
+# posts a one-time notice. It never checks out or executes PR code.
+
+on:
+  workflow_run:
+    workflows: [claude-check]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  notice:
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.head_repository.full_name != github.repository
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Post one-time notice
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HEAD_OWNER: ${{ github.event.workflow_run.head_repository.owner.login }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          pr=$(gh api "repos/$REPO/pulls?state=open&head=$HEAD_OWNER:$HEAD_BRANCH" --jq '.[0].number // empty')
+          [ -z "$pr" ] && { echo "no open PR for $HEAD_OWNER:$HEAD_BRANCH"; exit 0; }
+          marker='<!-- claude-check-fork-notice -->'
+          if gh api --paginate "repos/$REPO/issues/$pr/comments" --jq '.[].body' | grep -qF "$marker"; then exit 0; fi
+          printf '%s\n\n%s\n' "Checks with Claude only run on branches in this repo. The maintainer can review this PR and re-push it as an own branch to run the check." "$marker" > body.md
+          gh api -X POST "repos/$REPO/issues/$pr/comments" -F body=@body.md > /dev/null

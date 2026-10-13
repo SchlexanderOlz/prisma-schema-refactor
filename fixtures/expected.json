@@ -1,0 +1,1368 @@
+{
+  "version": 1,
+  "fixtureHash": "62027068d6e740439d56853e1580627bbcb3c25e86b7543b2eed7b0204a32e52",
+  "cases": [
+    {
+      "id": "M01-a",
+      "kind": "mess",
+      "rule": "R5",
+      "description": "ClientCompany duplicates Customer",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "ClientCompany",
+        "Customer"
+      ],
+      "checks": [
+        {
+          "type": "merged",
+          "a": "ClientCompany",
+          "b": "Customer"
+        },
+        {
+          "type": "quarantined",
+          "source": "ClientCompany",
+          "reason": "duplicate_loser",
+          "rows": 6
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Customer}}",
+          "equals": 45
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Customer}} WHERE {{C:Customer.customerNumber}} IN ('C-90001', 'C-90002', 'C-90003', 'C-90004', 'C-90005')",
+          "equals": 5
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{M:MigrationIdMap}} WHERE \"sourceModel\" = 'ClientCompany'",
+          "equals": 11
+        },
+        {
+          "type": "unique",
+          "refs": [
+            "ClientCompany.customerNumber"
+          ],
+          "metric": "S5"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M01-b",
+      "kind": "mess",
+      "rule": "R5",
+      "description": "Vendor duplicates Supplier",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "Vendor",
+        "Supplier"
+      ],
+      "checks": [
+        {
+          "type": "merged",
+          "a": "Vendor",
+          "b": "Supplier"
+        },
+        {
+          "type": "quarantined",
+          "source": "Vendor",
+          "reason": "duplicate_loser",
+          "rows": 4
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Supplier}}",
+          "equals": 18
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Supplier}} WHERE {{C:Supplier.supplierCode}} IN ('SUP-90001', 'SUP-90002', 'SUP-90003')",
+          "equals": 3
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{M:MigrationIdMap}} WHERE \"sourceModel\" = 'Vendor'",
+          "equals": 7
+        },
+        {
+          "type": "unique",
+          "refs": [
+            "Vendor.supplierCode"
+          ],
+          "metric": "S5"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M02-a",
+      "kind": "mess",
+      "rule": "R6",
+      "description": "EmployeeProfile is an unneeded 1:1 split of Employee",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "EmployeeProfile",
+        "Employee"
+      ],
+      "checks": [
+        {
+          "type": "merged",
+          "a": "EmployeeProfile",
+          "b": "Employee"
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Employee}} WHERE {{C:EmployeeProfile.dateOfBirth}} IS NOT NULL",
+          "equals": 27
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M02-b",
+      "kind": "mess",
+      "rule": "R6",
+      "description": "ProductDimensions is an unneeded 1:1 split of Product",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "ProductDimensions",
+        "Product"
+      ],
+      "checks": [
+        {
+          "type": "merged",
+          "a": "ProductDimensions",
+          "b": "Product"
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Product}} WHERE {{C:ProductDimensions.weightGrams}} IS NOT NULL",
+          "equals": 22
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M03-a",
+      "kind": "mess",
+      "rule": "R2",
+      "description": "Ticket.labelIds holds a delimited list of TicketLabel ids",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "Ticket"
+      ],
+      "checks": [
+        {
+          "type": "join_between",
+          "a": "Ticket",
+          "b": "TicketLabel"
+        },
+        {
+          "type": "quarantined",
+          "source": "Ticket",
+          "reason": "dangling_token",
+          "rows": 3
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{F:Ticket.labelIds}}",
+          "equals": 43
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M03-b",
+      "kind": "mess",
+      "rule": "R2",
+      "description": "Campaign.segmentIds holds a delimited list of Segment ids",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "Campaign"
+      ],
+      "checks": [
+        {
+          "type": "join_between",
+          "a": "Campaign",
+          "b": "Segment"
+        },
+        {
+          "type": "quarantined",
+          "source": "Campaign",
+          "reason": "dangling_token",
+          "rows": 2
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{F:Campaign.segmentIds}}",
+          "equals": 19
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M04-a",
+      "kind": "mess",
+      "rule": "R3",
+      "description": "Contact.phone1..3 is a repeating group",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "Contact"
+      ],
+      "checks": [
+        {
+          "type": "child_model",
+          "of": "Contact",
+          "fieldsFrom": [
+            "Contact.phone1",
+            "Contact.phone2",
+            "Contact.phone3"
+          ]
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{F:Contact.phone1}}",
+          "equals": 49
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M04-b",
+      "kind": "mess",
+      "rule": "R3",
+      "description": "Product.imageUrl1..3 is a repeating group",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "Product"
+      ],
+      "checks": [
+        {
+          "type": "child_model",
+          "of": "Product",
+          "fieldsFrom": [
+            "Product.imageUrl1",
+            "Product.imageUrl2",
+            "Product.imageUrl3"
+          ]
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{F:Product.imageUrl1}}",
+          "equals": 49
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M05-a",
+      "kind": "mess",
+      "rule": "R4",
+      "description": "Contact.customerName copies Customer.companyName",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "Contact"
+      ],
+      "checks": [
+        {
+          "type": "field_removed",
+          "ref": "Contact.customerName"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M05-b",
+      "kind": "mess",
+      "rule": "R4",
+      "description": "Task.projectTitle copies Project.title",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "Task"
+      ],
+      "checks": [
+        {
+          "type": "field_removed",
+          "ref": "Task.projectTitle"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M06-a",
+      "kind": "mess",
+      "rule": "R8",
+      "description": "TimeEntry.projectId duplicates the path via taskId",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "TimeEntry"
+      ],
+      "checks": [
+        {
+          "type": "field_removed",
+          "ref": "TimeEntry.projectId"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M06-b",
+      "kind": "mess",
+      "rule": "R8",
+      "description": "StocktakeLine.warehouseId duplicates the path via stocktakeId",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "StocktakeLine"
+      ],
+      "checks": [
+        {
+          "type": "field_removed",
+          "ref": "StocktakeLine.warehouseId"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M07-a",
+      "kind": "mess",
+      "rule": "R10",
+      "description": "Ticket.status is a status string with variants",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "Ticket"
+      ],
+      "checks": [
+        {
+          "type": "enum_field",
+          "ref": "Ticket.status",
+          "valuesSuperset": [
+            "OPEN",
+            "IN_PROGRESS",
+            "WAITING",
+            "RESOLVED",
+            "CLOSED"
+          ],
+          "metric": "S5"
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Ticket}} WHERE upper({{C:Ticket.status}}::text) = 'CLOSED'",
+          "equals": 6
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M07-b",
+      "kind": "mess",
+      "rule": "R10",
+      "description": "Lead.status is a status string with variants",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "Lead"
+      ],
+      "checks": [
+        {
+          "type": "enum_field",
+          "ref": "Lead.status",
+          "valuesSuperset": [
+            "NEW",
+            "CONTACTED",
+            "QUALIFIED",
+            "DISQUALIFIED"
+          ],
+          "metric": "S5"
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Lead}} WHERE upper({{C:Lead.status}}::text) = 'QUALIFIED'",
+          "equals": 6
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M07-c",
+      "kind": "mess",
+      "rule": "R10",
+      "description": "PurchaseOrder.status is a status string with variants",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "PurchaseOrder"
+      ],
+      "checks": [
+        {
+          "type": "enum_field",
+          "ref": "PurchaseOrder.status",
+          "valuesSuperset": [
+            "DRAFT",
+            "SENT",
+            "CONFIRMED",
+            "RECEIVED",
+            "CANCELLED"
+          ],
+          "metric": "S5"
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:PurchaseOrder}} WHERE upper({{C:PurchaseOrder.status}}::text) = 'RECEIVED'",
+          "equals": 7
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M08-a",
+      "kind": "mess",
+      "rule": "R11",
+      "description": "ShippingRate.price has the wrong type (float_money)",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "ShippingRate"
+      ],
+      "checks": [
+        {
+          "type": "field_type",
+          "ref": "ShippingRate.price",
+          "fieldType": "Decimal",
+          "nativeType": "Decimal",
+          "metric": "S5"
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT round(sum({{C:ShippingRate.price}}) * 100)::int FROM {{T:ShippingRate}}",
+          "equals": 68045
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M08-b",
+      "kind": "mess",
+      "rule": "R11",
+      "description": "Absence.startsOn has the wrong type (iso_date)",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "Absence"
+      ],
+      "checks": [
+        {
+          "type": "field_type",
+          "ref": "Absence.startsOn",
+          "fieldType": "DateTime",
+          "metric": "S5"
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Absence}} WHERE {{C:Absence.startsOn}} < DATE '2025-01-01'",
+          "equals": 25
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M08-c",
+      "kind": "mess",
+      "rule": "R11",
+      "description": "NewsletterSubscription.doubleOptIn has the wrong type (yes_no)",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "NewsletterSubscription"
+      ],
+      "checks": [
+        {
+          "type": "field_type",
+          "ref": "NewsletterSubscription.doubleOptIn",
+          "fieldType": "Boolean",
+          "metric": "S5"
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:NewsletterSubscription}} WHERE {{C:NewsletterSubscription.doubleOptIn}} IS TRUE",
+          "equals": 29
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M09-a",
+      "kind": "mess",
+      "rule": "R7",
+      "description": "Activity.contactId references Contact without @relation",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "Activity"
+      ],
+      "checks": [
+        {
+          "type": "fk",
+          "from": "Activity.contactId",
+          "to": "Contact",
+          "metric": "S5"
+        },
+        {
+          "type": "quarantined",
+          "source": "Activity",
+          "reason": "orphan_fk",
+          "rows": 3
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M09-b",
+      "kind": "mess",
+      "rule": "R7",
+      "description": "TrackingEvent.parcelId references Parcel without @relation",
+      "metrics": [
+        "S1",
+        "S5"
+      ],
+      "models": [
+        "TrackingEvent"
+      ],
+      "checks": [
+        {
+          "type": "fk",
+          "from": "TrackingEvent.parcelId",
+          "to": "Parcel",
+          "metric": "S5"
+        },
+        {
+          "type": "quarantined",
+          "source": "TrackingEvent",
+          "reason": "orphan_fk",
+          "rows": 2
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M10-a",
+      "kind": "mess",
+      "rule": "R13",
+      "description": "Currency.isoCode lacks @unique and has exact duplicates",
+      "metrics": [
+        "S5"
+      ],
+      "models": [
+        "Currency"
+      ],
+      "checks": [
+        {
+          "type": "unique",
+          "refs": [
+            "Currency.isoCode"
+          ],
+          "metric": "S5"
+        },
+        {
+          "type": "quarantined",
+          "source": "Currency",
+          "reason": "duplicate_loser",
+          "rows": 2,
+          "metric": "S5"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M10-b",
+      "kind": "mess",
+      "rule": "R13",
+      "description": "TaxRate.taxCode lacks @unique and has exact duplicates",
+      "metrics": [
+        "S5"
+      ],
+      "models": [
+        "TaxRate"
+      ],
+      "checks": [
+        {
+          "type": "unique",
+          "refs": [
+            "TaxRate.taxCode"
+          ],
+          "metric": "S5"
+        },
+        {
+          "type": "quarantined",
+          "source": "TaxRate",
+          "reason": "duplicate_loser",
+          "rows": 2,
+          "metric": "S5"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M11-a",
+      "kind": "mess",
+      "rule": "R12",
+      "description": "Ticket.createdAt is optional but never null",
+      "metrics": [
+        "S5"
+      ],
+      "models": [
+        "Ticket"
+      ],
+      "checks": [
+        {
+          "type": "field_required",
+          "ref": "Ticket.createdAt",
+          "metric": "S5"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M11-b",
+      "kind": "mess",
+      "rule": "R12",
+      "description": "Lead.fullName is optional but never null",
+      "metrics": [
+        "S5"
+      ],
+      "models": [
+        "Lead"
+      ],
+      "checks": [
+        {
+          "type": "field_required",
+          "ref": "Lead.fullName",
+          "metric": "S5"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M11-c",
+      "kind": "mess",
+      "rule": "R12",
+      "description": "PurchaseOrder.orderedAt is optional but never null",
+      "metrics": [
+        "S5"
+      ],
+      "models": [
+        "PurchaseOrder"
+      ],
+      "checks": [
+        {
+          "type": "field_required",
+          "ref": "PurchaseOrder.orderedAt",
+          "metric": "S5"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M12-a",
+      "kind": "mess",
+      "rule": "R18",
+      "description": "Project.milestones stores a list of Milestone entities as Json",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "Project"
+      ],
+      "checks": [
+        {
+          "type": "child_model",
+          "of": "Project",
+          "fieldsFrom": [
+            "Project.milestones"
+          ]
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{F:Project.milestones}}",
+          "equals": 32
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M13-a",
+      "kind": "mess",
+      "rule": "R9",
+      "description": "ShipmentParcel is a 1:n in disguise",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "ShipmentParcel",
+        "Parcel"
+      ],
+      "checks": [
+        {
+          "type": "fk",
+          "from": "ShipmentParcel.shipmentId",
+          "to": "Shipment"
+        },
+        {
+          "type": "data_sql",
+          "sql": "SELECT count(*) FROM {{T:Parcel}} WHERE {{C:ShipmentParcel.shipmentId}} IS NOT NULL",
+          "equals": 45
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M14-a",
+      "kind": "mess",
+      "rule": "R14",
+      "description": "TimeEntry.employeeId has no index",
+      "metrics": [
+        "S5"
+      ],
+      "models": [
+        "TimeEntry"
+      ],
+      "checks": [
+        {
+          "type": "index_on",
+          "ref": "TimeEntry.employeeId",
+          "metric": "S5"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M14-b",
+      "kind": "mess",
+      "rule": "R14",
+      "description": "StocktakeLine.productVariantId has no index",
+      "metrics": [
+        "S5"
+      ],
+      "models": [
+        "StocktakeLine"
+      ],
+      "checks": [
+        {
+          "type": "index_on",
+          "ref": "StocktakeLine.productVariantId",
+          "metric": "S5"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M15-a",
+      "kind": "mess",
+      "rule": "R15",
+      "description": "performance_reviews violates naming conventions",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "performance_reviews"
+      ],
+      "checks": [
+        {
+          "type": "naming",
+          "ref": "performance_reviews"
+        },
+        {
+          "type": "physical_name_unchanged",
+          "ref": "performance_reviews"
+        },
+        {
+          "type": "naming",
+          "ref": "performance_reviews.review_date"
+        },
+        {
+          "type": "physical_name_unchanged",
+          "ref": "performance_reviews.review_date"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M15-b",
+      "kind": "mess",
+      "rule": "R15",
+      "description": "CannedResponses violates naming conventions",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "CannedResponses"
+      ],
+      "checks": [
+        {
+          "type": "naming",
+          "ref": "CannedResponses"
+        },
+        {
+          "type": "physical_name_unchanged",
+          "ref": "CannedResponses"
+        },
+        {
+          "type": "naming",
+          "ref": "CannedResponses.response_body"
+        },
+        {
+          "type": "physical_name_unchanged",
+          "ref": "CannedResponses.response_body"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "M16-a",
+      "kind": "mess",
+      "rule": "R17",
+      "description": "Cart.itemCount caches a count of CartItem",
+      "metrics": [
+        "S1"
+      ],
+      "models": [
+        "Cart"
+      ],
+      "checks": [
+        {
+          "type": "field_removed",
+          "ref": "Cart.itemCount"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "T1",
+      "kind": "trap",
+      "rule": "R16",
+      "description": "OrderItem snapshot fields look like a transitive copy of the variant price (R4)",
+      "metrics": [
+        "S3"
+      ],
+      "models": [
+        "OrderItem"
+      ],
+      "checks": [
+        {
+          "type": "snapshot_kept",
+          "ref": "OrderItem.unitPrice"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "T2",
+      "kind": "trap",
+      "rule": "R16",
+      "description": "Shipment snapshot fields look like transitive copies of the customer address (R4)",
+      "metrics": [
+        "S3"
+      ],
+      "models": [
+        "Shipment"
+      ],
+      "checks": [
+        {
+          "type": "snapshot_kept",
+          "ref": "Shipment.shipToName"
+        },
+        {
+          "type": "snapshot_kept",
+          "ref": "Shipment.shipToStreet"
+        },
+        {
+          "type": "snapshot_kept",
+          "ref": "Shipment.shipToPostalCode"
+        },
+        {
+          "type": "snapshot_kept",
+          "ref": "Shipment.shipToCity"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "T3",
+      "kind": "trap",
+      "rule": "R16",
+      "description": "Invoice snapshot fields look like customer copies (R4) and cached totals (R17)",
+      "metrics": [
+        "S3"
+      ],
+      "models": [
+        "Invoice"
+      ],
+      "checks": [
+        {
+          "type": "snapshot_kept",
+          "ref": "Invoice.billingName"
+        },
+        {
+          "type": "snapshot_kept",
+          "ref": "Invoice.billingStreet"
+        },
+        {
+          "type": "snapshot_kept",
+          "ref": "Invoice.billingPostalCode"
+        },
+        {
+          "type": "snapshot_kept",
+          "ref": "Invoice.billingCity"
+        },
+        {
+          "type": "snapshot_kept",
+          "ref": "Invoice.totalNet"
+        },
+        {
+          "type": "snapshot_kept",
+          "ref": "Invoice.totalTax"
+        },
+        {
+          "type": "snapshot_kept",
+          "ref": "Invoice.totalGross"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "T4",
+      "kind": "trap",
+      "rule": "R18",
+      "description": "opaque Json that looks like an entity list",
+      "metrics": [
+        "S3"
+      ],
+      "models": [
+        "AuditEvent",
+        "AppSetting"
+      ],
+      "checks": [
+        {
+          "type": "json_kept",
+          "ref": "AuditEvent.payload"
+        },
+        {
+          "type": "json_kept",
+          "ref": "AppSetting.configData"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "A1",
+      "kind": "ambiguity",
+      "rule": "R19",
+      "description": "model without any relation",
+      "metrics": [
+        "S4"
+      ],
+      "models": [
+        "PublicHoliday"
+      ],
+      "checks": [
+        {
+          "type": "ambiguity_logged",
+          "refsAny": [
+            "PublicHoliday"
+          ]
+        },
+        {
+          "type": "model_kept",
+          "model": "PublicHoliday"
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "A2",
+      "kind": "ambiguity",
+      "rule": "R5",
+      "description": "overlapping models with different meaning",
+      "metrics": [
+        "S4"
+      ],
+      "models": [
+        "EmailTemplate",
+        "NotificationTemplate"
+      ],
+      "checks": [
+        {
+          "type": "not_merged",
+          "a": "EmailTemplate",
+          "b": "NotificationTemplate"
+        },
+        {
+          "type": "ambiguity_logged",
+          "refsAny": [
+            "EmailTemplate",
+            "NotificationTemplate"
+          ]
+        }
+      ],
+      "anyOf": null
+    },
+    {
+      "id": "A3",
+      "kind": "ambiguity",
+      "rule": "R13",
+      "description": "natural key with conflicting duplicates",
+      "metrics": [
+        "S4"
+      ],
+      "models": [
+        "Carrier"
+      ],
+      "checks": [],
+      "anyOf": [
+        [
+          {
+            "type": "unique",
+            "refs": [
+              "Carrier.carrierCode"
+            ],
+            "negate": true
+          },
+          {
+            "type": "ambiguity_logged",
+            "refsAny": [
+              "Carrier.carrierCode"
+            ]
+          }
+        ],
+        [
+          {
+            "type": "unique",
+            "refs": [
+              "Carrier.carrierCode"
+            ]
+          },
+          {
+            "type": "dedupe_documented",
+            "model": "Carrier"
+          },
+          {
+            "type": "quarantined",
+            "source": "Carrier",
+            "reason": "duplicate_loser",
+            "rows": 1
+          },
+          {
+            "type": "ambiguity_logged",
+            "refsAny": [
+              "Carrier.carrierCode"
+            ]
+          }
+        ]
+      ]
+    },
+    {
+      "id": "A4",
+      "kind": "ambiguity",
+      "rule": "R11",
+      "description": "quantity string with mixed units",
+      "metrics": [
+        "S4"
+      ],
+      "models": [
+        "PurchaseOrderLine"
+      ],
+      "checks": [
+        {
+          "type": "field_type",
+          "ref": "PurchaseOrderLine.orderedQuantity",
+          "fieldType": "String"
+        },
+        {
+          "type": "ambiguity_logged",
+          "refsAny": [
+            "PurchaseOrderLine.orderedQuantity"
+          ]
+        }
+      ],
+      "anyOf": null
+    }
+  ],
+  "cleanModels": [
+    "User",
+    "Role",
+    "Permission",
+    "RolePermission",
+    "UserRole",
+    "Session",
+    "ApiKey",
+    "UserCredential",
+    "Department",
+    "Position",
+    "EmploymentContract",
+    "AbsenceType",
+    "Team",
+    "TeamMembership",
+    "Skill",
+    "EmployeeSkill",
+    "Industry",
+    "CustomerAddress",
+    "LeadSource",
+    "PipelineStage",
+    "Opportunity",
+    "CrmNote",
+    "Competitor",
+    "Brand",
+    "Category",
+    "UnitOfMeasure",
+    "ProductVariant",
+    "ProductCategory",
+    "AttributeDefinition",
+    "ProductAttributeValue",
+    "Tag",
+    "ProductTag",
+    "PriceList",
+    "PriceListEntry",
+    "Warehouse",
+    "StorageLocation",
+    "StockLevel",
+    "StockMovement",
+    "Stocktake",
+    "SalesChannel",
+    "CartItem",
+    "SalesOrder",
+    "Discount",
+    "DiscountRedemption",
+    "ReturnRequest",
+    "ReturnItem",
+    "OrderStatusChange",
+    "PaymentTerm",
+    "BillingAccount",
+    "InvoiceLine",
+    "CreditNote",
+    "CreditNoteLine",
+    "DunningLevel",
+    "DunningNotice",
+    "PaymentProvider",
+    "PaymentMethod",
+    "Payment",
+    "PaymentAllocation",
+    "Refund",
+    "Payout",
+    "CarrierService",
+    "ShippingZone",
+    "DeliveryAttempt",
+    "SupportQueue",
+    "SlaPolicy",
+    "TicketCategory",
+    "TicketLabel",
+    "TicketMessage",
+    "ProjectTemplate",
+    "ProjectMember",
+    "TaskDependency",
+    "TaskComment",
+    "Segment",
+    "SegmentMembership",
+    "Newsletter",
+    "MarketingConsent",
+    "Folder",
+    "Document",
+    "DocumentVersion",
+    "DocumentShare",
+    "Notification",
+    "NotificationPreference",
+    "Webhook"
+  ],
+  "metricCoverage": {
+    "S1": [
+      "M01-a",
+      "M01-b",
+      "M02-a",
+      "M02-b",
+      "M03-a",
+      "M03-b",
+      "M04-a",
+      "M04-b",
+      "M05-a",
+      "M05-b",
+      "M06-a",
+      "M06-b",
+      "M07-a",
+      "M07-b",
+      "M07-c",
+      "M08-a",
+      "M08-b",
+      "M08-c",
+      "M09-a",
+      "M09-b",
+      "M12-a",
+      "M13-a",
+      "M15-a",
+      "M15-b",
+      "M16-a"
+    ],
+    "S2": [
+      "User",
+      "Role",
+      "Permission",
+      "RolePermission",
+      "UserRole",
+      "Session",
+      "ApiKey",
+      "UserCredential",
+      "Department",
+      "Position",
+      "EmploymentContract",
+      "AbsenceType",
+      "Team",
+      "TeamMembership",
+      "Skill",
+      "EmployeeSkill",
+      "Industry",
+      "CustomerAddress",
+      "LeadSource",
+      "PipelineStage",
+      "Opportunity",
+      "CrmNote",
+      "Competitor",
+      "Brand",
+      "Category",
+      "UnitOfMeasure",
+      "ProductVariant",
+      "ProductCategory",
+      "AttributeDefinition",
+      "ProductAttributeValue",
+      "Tag",
+      "ProductTag",
+      "PriceList",
+      "PriceListEntry",
+      "Warehouse",
+      "StorageLocation",
+      "StockLevel",
+      "StockMovement",
+      "Stocktake",
+      "SalesChannel",
+      "CartItem",
+      "SalesOrder",
+      "Discount",
+      "DiscountRedemption",
+      "ReturnRequest",
+      "ReturnItem",
+      "OrderStatusChange",
+      "PaymentTerm",
+      "BillingAccount",
+      "InvoiceLine",
+      "CreditNote",
+      "CreditNoteLine",
+      "DunningLevel",
+      "DunningNotice",
+      "PaymentProvider",
+      "PaymentMethod",
+      "Payment",
+      "PaymentAllocation",
+      "Refund",
+      "Payout",
+      "CarrierService",
+      "ShippingZone",
+      "DeliveryAttempt",
+      "SupportQueue",
+      "SlaPolicy",
+      "TicketCategory",
+      "TicketLabel",
+      "TicketMessage",
+      "ProjectTemplate",
+      "ProjectMember",
+      "TaskDependency",
+      "TaskComment",
+      "Segment",
+      "SegmentMembership",
+      "Newsletter",
+      "MarketingConsent",
+      "Folder",
+      "Document",
+      "DocumentVersion",
+      "DocumentShare",
+      "Notification",
+      "NotificationPreference",
+      "Webhook"
+    ],
+    "S3": [
+      "T1",
+      "T2",
+      "T3",
+      "T4"
+    ],
+    "S4": [
+      "A1",
+      "A2",
+      "A3",
+      "A4"
+    ],
+    "S5": [
+      "M01-a",
+      "M01-b",
+      "M07-a",
+      "M07-b",
+      "M07-c",
+      "M08-a",
+      "M08-b",
+      "M08-c",
+      "M09-a",
+      "M09-b",
+      "M10-a",
+      "M10-b",
+      "M11-a",
+      "M11-b",
+      "M11-c",
+      "M14-a",
+      "M14-b"
+    ]
+  },
+  "stats": {
+    "cleanModels": 122,
+    "messyModels": 122,
+    "modelsTouchedByMess": 29,
+    "untouchedShare": 0.762
+  }
+}

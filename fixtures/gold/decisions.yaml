@@ -1,0 +1,92 @@
+version: 1
+ambiguities:
+  - id: AMB-1
+    refs:
+      - PublicHoliday
+    rule: R19
+    question: PublicHoliday has no relations. Is it still read by application code (e.g. working-day calculations)?
+    options:
+      - keep unchanged
+      - drop the model
+    chosen: safe_default
+  - id: AMB-2
+    refs:
+      - EmailTemplate
+      - NotificationTemplate
+    rule: R5
+    question: EmailTemplate and NotificationTemplate share most fields but no template keys. Are they the same concept?
+    options:
+      - keep both models
+      - merge into one template model with a kind column
+    chosen: safe_default
+  - id: AMB-3
+    refs:
+      - Carrier.carrierCode
+    rule: R13
+    question: Two Carrier rows share a carrierCode but differ in title and tracking URL. Which one is authoritative?
+    options:
+      - no unique constraint
+      - make carrierCode unique and quarantine one row
+    chosen: safe_default
+  - id: AMB-4
+    refs:
+      - PurchaseOrderLine.orderedQuantity
+    rule: R11
+    question: PurchaseOrderLine.orderedQuantity mixes units ("2 kg", "500g", "1.5"). What unit should a numeric column use?
+    options:
+      - keep as String
+      - split into a numeric quantity and a unit
+    chosen: safe_default
+snapshots:
+  - id: SNAP-1
+    refs:
+      - OrderItem.unitPrice
+    reason: variant price at the moment the order was placed
+  - id: SNAP-2
+    refs:
+      - Shipment.shipToName
+      - Shipment.shipToStreet
+      - Shipment.shipToPostalCode
+      - Shipment.shipToCity
+    reason: recipient and delivery address printed on the label at dispatch
+  - id: SNAP-3
+    refs:
+      - Invoice.billingName
+      - Invoice.billingStreet
+      - Invoice.billingPostalCode
+      - Invoice.billingCity
+    reason: billing party as printed on the issued invoice
+  - id: SNAP-4
+    refs:
+      - Invoice.totalNet
+      - Invoice.totalTax
+      - Invoice.totalGross
+    reason: invoice totals as issued, including rounding adjustments
+quarantine:
+  - source: ClientCompany
+    reason: duplicate_loser
+    rows: 6
+  - source: Vendor
+    reason: duplicate_loser
+    rows: 4
+  - source: Ticket
+    reason: dangling_token
+    rows: 3
+  - source: Campaign
+    reason: dangling_token
+    rows: 2
+  - source: Activity
+    reason: orphan_fk
+    rows: 3
+  - source: TrackingEvent
+    reason: orphan_fk
+    rows: 2
+  - source: Currency
+    reason: duplicate_loser
+    rows: 2
+  - source: TaxRate
+    reason: duplicate_loser
+    rows: 2
+assumptions:
+  - AuditEvent.payload is an opaque payload and stays Json (R18)
+  - AppSetting.configData is an opaque payload and stays Json (R18)

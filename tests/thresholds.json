@@ -1,0 +1,9 @@
+{
+  "S1": { "min": 0.90, "maxDrop": 0.05 },
+  "S2": { "min": 1.00, "maxDrop": 0.00 },
+  "S3": { "min": 1.00, "maxDrop": 0.00 },
+  "S4": { "min": 0.80, "maxDrop": 0.10 },
+  "S5": { "min": 0.90, "maxDrop": 0.05 },
+  "S6": { "min": 0.80, "maxDrop": 0.10 },
+  "S7": { "warnIfMedianTokensAbove": 1.5 }
+}

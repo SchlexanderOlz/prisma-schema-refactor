@@ -1,0 +1,313 @@
+name: claude-check
+
+# Runs the skill N times on every PR, scores each run, aggregates a verdict and posts it.
+# Security: plain `pull_request` (never pull_request_target); Claude steps get only
+# CLAUDE_CODE_OAUTH_TOKEN, never a GitHub token; fork PRs never get secrets.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+concurrency:
+  # Label events other than run-check only re-aggregate; they must not cancel a running check.
+  group: claude-check-${{ github.event.pull_request.number }}-${{ (github.event.action == 'labeled' && github.event.label.name != 'run-check') && 'relabel' || 'run' }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '24.21.0'
+  CLAUDE_CODE_VERSION: '2.1.296'
+  PGURL_ADMIN: postgresql://postgres:postgres@localhost:5432/postgres
+
+jobs:
+  selftest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17.10-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 2s --health-timeout 3s --health-retries 30
+    steps:
+      - name: Check out PR head (validates harness changes too)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm run selftest
+      - if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: selftest
+          path: results/selftest
+          if-no-files-found: ignore
+
+  authorize:
+    runs-on: ubuntu-24.04
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+      reuse: ${{ steps.decide.outputs.reuse }}
+      runs: ${{ steps.decide.outputs.runs }}
+      count: ${{ steps.decide.outputs.count }}
+    steps:
+      - id: decide
+        env:
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          REPO: ${{ github.repository }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          SENDER: ${{ github.event.sender.login }}
+          ACTION: ${{ github.event.action }}
+          LABEL: ${{ github.event.label.name }}
+          OWNER: ${{ vars.OWNER }}
+          CHECK_RUNS: ${{ vars.CHECK_RUNS }}
+        run: |
+          run=false
+          reuse=false
+          if [ -z "$OWNER" ]; then
+            echo "::error::repository variable OWNER is not set"
+          elif [ "$HEAD_REPO" != "$REPO" ]; then
+            echo "Fork PR: checks with Claude only run on branches in this repo."
+          elif [ "$ACTION" = "labeled" ]; then
+            if [ "$LABEL" = "run-check" ] && [ "$SENDER" = "$OWNER" ]; then run=true
+            elif [ "$AUTHOR" = "$OWNER" ]; then reuse=true   # e.g. harness-change added: re-aggregate, no new Claude runs
+            fi
+          elif [ "$AUTHOR" = "$OWNER" ]; then
+            run=true
+          fi
+          n=${CHECK_RUNS:-5}
+          case "$n" in ''|*[!0-9]*) n=5 ;; esac
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          echo "reuse=$reuse" >> "$GITHUB_OUTPUT"
+          echo "count=$n" >> "$GITHUB_OUTPUT"
+          echo "runs=[$(seq -s, 1 "$n")]" >> "$GITHUB_OUTPUT"
+          echo "run=$run reuse=$reuse runs=$n"
+
+  skill-run:
+    needs: authorize
+    if: needs.authorize.outputs.run == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        run: ${{ fromJSON(needs.authorize.outputs.runs) }}
+    services:
+      postgres:
+        image: postgres:17.10-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 2s --health-timeout 3s --health-retries 30
+    steps:
+      - name: Check out base (harness, tests, fixtures)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - name: Check out PR head into pr/ (only the skill is used)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+          sparse-checkout: skills/refactor-prisma-db
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Install the PR's skill into ~/.claude/skills
+        run: ./install.sh pr/skills
+      - name: Install Claude Code CLI
+        run: npm install -g --no-audit --no-fund @anthropic-ai/claude-code@${{ env.CLAUDE_CODE_VERSION }} && claude --version
+      - name: Run skill and score (run ${{ matrix.run }})
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          set +e
+          ./tests/run-tests.sh --with-claude --runs 1 --run-id ${{ matrix.run }} --skill-dir pr/skills/refactor-prisma-db
+          code=$?
+          echo "run-tests exit code: $code (0 ready, 1 not ready, 2 harness error)"
+          [ "$code" -eq 2 ] && exit 2
+          exit 0
+      - if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: run-${{ matrix.run }}
+          path: results/run-${{ matrix.run }}
+          if-no-files-found: warn
+
+  aggregate:
+    needs: [selftest, authorize, skill-run]
+    if: always() && (needs.authorize.outputs.run == 'true' || needs.authorize.outputs.reuse == 'true')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+      issues: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Download this run's results
+        if: needs.authorize.outputs.run == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: run-*
+          path: results
+      - name: Reuse results of the latest completed check on this commit
+        if: needs.authorize.outputs.reuse == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          mkdir -p results
+          for id in $(gh run list --repo "$REPO" --workflow claude-check.yml --commit "$HEAD_SHA" --status completed --limit 20 --json databaseId --jq '.[].databaseId'); do
+            [ "$id" = "$GITHUB_RUN_ID" ] && continue
+            if gh api "repos/$REPO/actions/runs/$id/artifacts" --jq '.artifacts[].name' | grep -q '^run-'; then
+              echo "reusing runs from workflow run $id"
+              gh run download "$id" --repo "$REPO" --pattern 'run-*' --dir results
+              break
+            fi
+          done
+          ls results
+      - name: Fetch baseline from the metrics branch
+        run: |
+          git fetch --depth=1 origin metrics:refs/remotes/origin/metrics 2>/dev/null && git show origin/metrics:baseline.json > baseline.json || echo '{}' > baseline.json
+          head -c 300 baseline.json; echo
+      - name: Harness change and label
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          OWNER: ${{ vars.OWNER }}
+        run: |
+          touched=false
+          if gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename' | grep -qE '^(tests|fixtures|\.github)/'; then touched=true; fi
+          label_ok=false
+          has=$(gh api "repos/$REPO/issues/$PR/labels" --jq '.[].name' | grep -cx 'harness-change' || true)
+          by=$(gh api --paginate "repos/$REPO/issues/$PR/events" --jq '.[] | select(.event == "labeled" and .label.name == "harness-change") | .actor.login' | tail -1)
+          if [ "$has" -ge 1 ] && [ "$by" = "$OWNER" ]; then label_ok=true; fi
+          echo "touched=$touched" >> "$GITHUB_OUTPUT"
+          echo "label_ok=$label_ok" >> "$GITHUB_OUTPUT"
+          echo "harness touched=$touched, harness-change label by owner=$label_ok"
+      - name: Aggregate
+        run: |
+          node --disable-warning=ExperimentalWarning tests/aggregate.ts \
+            --runs-dir results \
+            --expected-runs ${{ needs.authorize.outputs.count }} \
+            --baseline baseline.json \
+            --selftest ${{ needs.selftest.result == 'success' && 'passed' || 'failed' }} \
+            --harness-touched ${{ steps.pr.outputs.touched }} \
+            --label-ok ${{ steps.pr.outputs.label_ok }} \
+            --pr ${{ github.event.pull_request.number }} \
+            --out report
+          cat report/report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: report
+          path: report
+
+  report:
+    needs: [aggregate]
+    if: always() && needs.aggregate.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: report
+          path: report
+      - name: Install Claude Code CLI
+        run: npm install -g --no-audit --no-fund @anthropic-ai/claude-code@${{ env.CLAUDE_CODE_VERSION }}
+      - name: Format report with Claude (no GitHub token, no tools)
+        continue-on-error: true
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          prompt='Format report.json (on stdin) as a concise GitHub PR comment: verdict line first, verbatim; then the gates table with per-run ✅/❌; then the metrics table (value, min, baseline, delta, status); cost; then the top failing cases grouped by rule. Do not change, round or omit any number. Do not add judgments. Output only the comment markdown.'
+          timeout 600 claude -p "$prompt" --tools "" --max-turns 2 --output-format text --no-session-persistence < report/report.json > comment.md
+      - name: Verify Claude kept every number; otherwise post report.md raw
+        run: |
+          if [ -s comment.md ] && node --disable-warning=ExperimentalWarning tests/verify-comment.ts report/report.json comment.md; then
+            echo "using Claude-formatted comment"
+          else
+            echo "falling back to report.md"
+            cp report/report.md comment.md
+          fi
+      - name: Post sticky comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          marker='<!-- claude-check-report -->'
+          { cat comment.md; printf '\n\n%s\n' "$marker"; } > body.md
+          id=$(gh api --paginate "repos/$REPO/issues/$PR/comments" --jq ".[] | select(.body | contains(\"$marker\")) | .id" | head -1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$id" -F body=@body.md > /dev/null
+          else
+            gh api -X POST "repos/$REPO/issues/$PR/comments" -F body=@body.md > /dev/null
+          fi
+
+  gate:
+    needs: [authorize, aggregate]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Not evaluated
+        if: needs.authorize.outputs.run != 'true' && needs.authorize.outputs.reuse != 'true'
+        run: |
+          echo "::error::not evaluated: Claude checks only run for PRs by the owner from branches in this repo (or after the owner adds the run-check label)."
+          exit 1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        if: needs.aggregate.result == 'success'
+        with:
+          name: report
+          path: report
+      - name: Verdict
+        run: |
+          v=$(cat report/verdict.txt 2>/dev/null || echo "missing")
+          echo "verdict: $v"
+          if [ "$v" != "MERGE-READY" ]; then
+            echo "::error::verdict is $v"
+            exit 1
+          fi

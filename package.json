@@ -1,0 +1,27 @@
+{
+  "name": "prisma-schema-refactor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Claude skill that designs a normalized target for a Prisma + PostgreSQL schema, plus a deterministic eval harness.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "fixtures": "node fixtures/generator/index.ts --out fixtures",
+    "selftest": "./tests/run-tests.sh --selftest",
+    "test:gold": "./tests/run-tests.sh --gold",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "devDependencies": {
+    "@mrleebo/prisma-ast": "0.16.0",
+    "@types/node": "24.10.1",
+    "@types/pg": "8.15.6",
+    "pg": "8.16.3",
+    "prisma": "7.10.0",
+    "typescript": "5.9.3",
+    "yaml": "2.8.1",
+    "zod": "4.1.12"
+  }
+}

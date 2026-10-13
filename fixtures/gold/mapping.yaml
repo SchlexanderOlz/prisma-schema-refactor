@@ -1,0 +1,6953 @@
+version: 1
+models:
+  - source: User
+    action: keep
+    target: User
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: User.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: emailAddress
+        action: copy
+        target: User.emailAddress
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: displayName
+        action: copy
+        target: User.displayName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: copy
+        target: User.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: lastLoginAt
+        action: copy
+        target: User.lastLoginAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: User.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Role
+    action: keep
+    target: Role
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Role.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: roleKey
+        action: copy
+        target: Role.roleKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Role.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: details
+        action: copy
+        target: Role.details
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Permission
+    action: keep
+    target: Permission
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Permission.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: permissionKey
+        action: copy
+        target: Permission.permissionKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: details
+        action: copy
+        target: Permission.details
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: RolePermission
+    action: keep
+    target: RolePermission
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: roleId
+        action: copy
+        target: RolePermission.roleId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: permissionId
+        action: copy
+        target: RolePermission.permissionId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: grantedAt
+        action: copy
+        target: RolePermission.grantedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: UserRole
+    action: keep
+    target: UserRole
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: userId
+        action: copy
+        target: UserRole.userId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: roleId
+        action: copy
+        target: UserRole.roleId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: assignedAt
+        action: copy
+        target: UserRole.assignedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Session
+    action: keep
+    target: Session
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Session.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: userId
+        action: copy
+        target: Session.userId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: tokenHash
+        action: copy
+        target: Session.tokenHash
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: ipAddress
+        action: copy
+        target: Session.ipAddress
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: expiresAt
+        action: copy
+        target: Session.expiresAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Session.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ApiKey
+    action: keep
+    target: ApiKey
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: ApiKey.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: userId
+        action: copy
+        target: ApiKey.userId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: keyPrefix
+        action: copy
+        target: ApiKey.keyPrefix
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: label
+        action: copy
+        target: ApiKey.label
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: revokedAt
+        action: copy
+        target: ApiKey.revokedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: ApiKey.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: UserCredential
+    action: keep
+    target: UserCredential
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: UserCredential.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: userId
+        action: copy
+        target: UserCredential.userId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: passwordHash
+        action: copy
+        target: UserCredential.passwordHash
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: mfaSecret
+        action: copy
+        target: UserCredential.mfaSecret
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: passwordChangedAt
+        action: copy
+        target: UserCredential.passwordChangedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Department
+    action: keep
+    target: Department
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Department.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: departmentCode
+        action: copy
+        target: Department.departmentCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Department.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: parentId
+        action: copy
+        target: Department.parentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: costCenter
+        action: copy
+        target: Department.costCenter
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Position
+    action: keep
+    target: Position
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Position.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: positionCode
+        action: copy
+        target: Position.positionCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Position.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: departmentId
+        action: copy
+        target: Position.departmentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: minSalary
+        action: copy
+        target: Position.minSalary
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: maxSalary
+        action: copy
+        target: Position.maxSalary
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Employee
+    action: keep
+    target: Employee
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Employee.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: employeeNumber
+        action: copy
+        target: Employee.employeeNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: firstName
+        action: copy
+        target: Employee.firstName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: lastName
+        action: copy
+        target: Employee.lastName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: workEmail
+        action: copy
+        target: Employee.workEmail
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: departmentId
+        action: copy
+        target: Employee.departmentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: positionId
+        action: copy
+        target: Employee.positionId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: managerId
+        action: copy
+        target: Employee.managerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: userId
+        action: copy
+        target: Employee.userId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: hiredOn
+        action: copy
+        target: Employee.hiredOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: terminatedOn
+        action: copy
+        target: Employee.terminatedOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: EmployeeProfile
+    action: merge
+    target: Employee
+    rules:
+      - R6
+    reason: 1:1 split of Employee without blobs or secrets
+    dedupe: null
+    fields:
+      - source: id
+        action: move
+        target: Employee.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: ids remapped via MigrationIdMap
+      - source: employeeId
+        action: derive_away
+        target: null
+        transform: null
+        values: null
+        derivable_from: Employee.id via employee
+        decision: null
+        rules:
+          - R6
+        reason: null
+      - source: dateOfBirth
+        action: move
+        target: Employee.dateOfBirth
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R6
+        reason: null
+      - source: emergencyContactName
+        action: move
+        target: Employee.emergencyContactName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R6
+        reason: null
+      - source: emergencyContactPhone
+        action: move
+        target: Employee.emergencyContactPhone
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R6
+        reason: null
+  - source: EmploymentContract
+    action: keep
+    target: EmploymentContract
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: EmploymentContract.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: employeeId
+        action: copy
+        target: EmploymentContract.employeeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: contractType
+        action: copy
+        target: EmploymentContract.contractType
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: startsOn
+        action: copy
+        target: EmploymentContract.startsOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: endsOn
+        action: copy
+        target: EmploymentContract.endsOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: weeklyHours
+        action: copy
+        target: EmploymentContract.weeklyHours
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: annualSalary
+        action: copy
+        target: EmploymentContract.annualSalary
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: signedAt
+        action: copy
+        target: EmploymentContract.signedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: AbsenceType
+    action: keep
+    target: AbsenceType
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: AbsenceType.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: typeCode
+        action: copy
+        target: AbsenceType.typeCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: AbsenceType.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isPaid
+        action: copy
+        target: AbsenceType.isPaid
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Absence
+    action: keep
+    target: Absence
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Absence.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: employeeId
+        action: copy
+        target: Absence.employeeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: absenceTypeId
+        action: copy
+        target: Absence.absenceTypeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: startsOn
+        action: transform
+        target: Absence.startsOn
+        transform: cast_datetime
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R11
+        reason: every value parses unambiguously
+      - source: endsOn
+        action: copy
+        target: Absence.endsOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: approvedById
+        action: copy
+        target: Absence.approvedById
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: note
+        action: copy
+        target: Absence.note
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Team
+    action: keep
+    target: Team
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Team.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Team.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: departmentId
+        action: copy
+        target: Team.departmentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: leadId
+        action: copy
+        target: Team.leadId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: TeamMembership
+    action: keep
+    target: TeamMembership
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: teamId
+        action: copy
+        target: TeamMembership.teamId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: employeeId
+        action: copy
+        target: TeamMembership.employeeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: joinedOn
+        action: copy
+        target: TeamMembership.joinedOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Skill
+    action: keep
+    target: Skill
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Skill.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Skill.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: details
+        action: copy
+        target: Skill.details
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: EmployeeSkill
+    action: keep
+    target: EmployeeSkill
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: employeeId
+        action: copy
+        target: EmployeeSkill.employeeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: skillId
+        action: copy
+        target: EmployeeSkill.skillId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: proficiency
+        action: copy
+        target: EmployeeSkill.proficiency
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: performance_reviews
+    action: rename
+    target: PerformanceReview
+    rules:
+      - R15
+    reason: naming convention; physical name kept via @@map
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PerformanceReview.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: employee_id
+        action: copy
+        target: PerformanceReview.employeeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R15
+        reason: camelCase via @map
+      - source: reviewer_id
+        action: copy
+        target: PerformanceReview.reviewerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R15
+        reason: camelCase via @map
+      - source: review_date
+        action: copy
+        target: PerformanceReview.reviewDate
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R15
+        reason: camelCase via @map
+      - source: score
+        action: copy
+        target: PerformanceReview.score
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: summary
+        action: copy
+        target: PerformanceReview.summary
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PublicHoliday
+    action: keep
+    target: PublicHoliday
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PublicHoliday.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: holidayDate
+        action: copy
+        target: PublicHoliday.holidayDate
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: PublicHoliday.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isHalfDay
+        action: copy
+        target: PublicHoliday.isHalfDay
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Industry
+    action: keep
+    target: Industry
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Industry.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: industryCode
+        action: copy
+        target: Industry.industryCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Industry.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Customer
+    action: keep
+    target: Customer
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Customer.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerNumber
+        action: copy
+        target: Customer.customerNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: companyName
+        action: copy
+        target: Customer.companyName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: billingEmail
+        action: copy
+        target: Customer.billingEmail
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: phone
+        action: copy
+        target: Customer.phone
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: vatId
+        action: copy
+        target: Customer.vatId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: industryId
+        action: copy
+        target: Customer.industryId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: accountManagerId
+        action: copy
+        target: Customer.accountManagerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: creditLimit
+        action: copy
+        target: Customer.creditLimit
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: copy
+        target: Customer.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Customer.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ClientCompany
+    action: merge
+    target: Customer
+    rules:
+      - R5
+    reason: "same concept as Customer: 8 shared fields and shared customerNumber values"
+    dedupe:
+      key:
+        - customerNumber
+      winner: oldest_created_at
+    fields:
+      - source: id
+        action: move
+        target: Customer.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: ids remapped via MigrationIdMap
+      - source: customerNumber
+        action: move
+        target: Customer.customerNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: companyName
+        action: move
+        target: Customer.companyName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: billingEmail
+        action: move
+        target: Customer.billingEmail
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: phone
+        action: move
+        target: Customer.phone
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: vatId
+        action: move
+        target: Customer.vatId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: industryId
+        action: move
+        target: Customer.industryId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: move
+        target: Customer.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: move
+        target: Customer.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Contact
+    action: keep
+    target: Contact
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Contact.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: Contact.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerName
+        action: derive_away
+        target: null
+        transform: null
+        values: null
+        derivable_from: Customer.companyName via customer
+        decision: null
+        rules:
+          - R4
+        reason: always equals Customer.companyName
+      - source: firstName
+        action: copy
+        target: Contact.firstName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: lastName
+        action: copy
+        target: Contact.lastName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: emailAddress
+        action: copy
+        target: Contact.emailAddress
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: jobTitle
+        action: copy
+        target: Contact.jobTitle
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: phone1
+        action: explode
+        target: ContactPhone.phoneNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R3
+        reason: repeating group
+      - source: phone2
+        action: explode
+        target: ContactPhone.phoneNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R3
+        reason: repeating group
+      - source: phone3
+        action: explode
+        target: ContactPhone.phoneNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R3
+        reason: repeating group
+      - source: isPrimary
+        action: copy
+        target: Contact.isPrimary
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: CustomerAddress
+    action: keep
+    target: CustomerAddress
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: CustomerAddress.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: CustomerAddress.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: label
+        action: copy
+        target: CustomerAddress.label
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: street
+        action: copy
+        target: CustomerAddress.street
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: postalCode
+        action: copy
+        target: CustomerAddress.postalCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: city
+        action: copy
+        target: CustomerAddress.city
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: countryCode
+        action: copy
+        target: CustomerAddress.countryCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isDefaultShipping
+        action: copy
+        target: CustomerAddress.isDefaultShipping
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: LeadSource
+    action: keep
+    target: LeadSource
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: LeadSource.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: sourceKey
+        action: copy
+        target: LeadSource.sourceKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: LeadSource.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Lead
+    action: keep
+    target: Lead
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Lead.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: fullName
+        action: copy
+        target: Lead.fullName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R12
+        reason: never null
+      - source: companyName
+        action: copy
+        target: Lead.companyName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: emailAddress
+        action: copy
+        target: Lead.emailAddress
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: leadSourceId
+        action: copy
+        target: Lead.leadSourceId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: status
+        action: transform
+        target: Lead.status
+        transform: map_enum
+        values:
+          " Disqualified": DISQUALIFIED
+          " New": NEW
+          " Qualified": QUALIFIED
+          CONTACTED: CONTACTED
+          "CONTACTED ": CONTACTED
+          Contacted: CONTACTED
+          DISQUALIFIED: DISQUALIFIED
+          "DISQUALIFIED ": DISQUALIFIED
+          Disqualified: DISQUALIFIED
+          NEW: NEW
+          "NEW ": NEW
+          New: NEW
+          Qualified: QUALIFIED
+          contacted: CONTACTED
+          "contacted ": CONTACTED
+          disqualified: DISQUALIFIED
+          "disqualified ": DISQUALIFIED
+          new: NEW
+          qualified: QUALIFIED
+        derivable_from: null
+        decision: null
+        rules:
+          - R10
+        reason: closed set with case/whitespace variants
+      - source: ownerId
+        action: copy
+        target: Lead.ownerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Lead.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PipelineStage
+    action: keep
+    target: PipelineStage
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PipelineStage.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: PipelineStage.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: sortOrder
+        action: copy
+        target: PipelineStage.sortOrder
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: winProbability
+        action: copy
+        target: PipelineStage.winProbability
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Opportunity
+    action: keep
+    target: Opportunity
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Opportunity.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: Opportunity.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Opportunity.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: stageId
+        action: copy
+        target: Opportunity.stageId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: expectedValue
+        action: copy
+        target: Opportunity.expectedValue
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: expectedCloseOn
+        action: copy
+        target: Opportunity.expectedCloseOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: ownerId
+        action: copy
+        target: Opportunity.ownerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: competitorId
+        action: copy
+        target: Opportunity.competitorId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Opportunity.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Activity
+    action: keep
+    target: Activity
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Activity.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: activityKind
+        action: copy
+        target: Activity.activityKind
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: subject
+        action: copy
+        target: Activity.subject
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: contactId
+        action: copy
+        target: Activity.contactId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R7
+          - R14
+        reason: id-like scalar referencing Contact
+      - source: opportunityId
+        action: copy
+        target: Activity.opportunityId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: employeeId
+        action: copy
+        target: Activity.employeeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: occurredAt
+        action: copy
+        target: Activity.occurredAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: CrmNote
+    action: keep
+    target: CrmNote
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: CrmNote.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: CrmNote.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: authorId
+        action: copy
+        target: CrmNote.authorId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: body
+        action: copy
+        target: CrmNote.body
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: CrmNote.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Competitor
+    action: keep
+    target: Competitor
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Competitor.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: companyName
+        action: copy
+        target: Competitor.companyName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: websiteUrl
+        action: copy
+        target: Competitor.websiteUrl
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Brand
+    action: keep
+    target: Brand
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Brand.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: brandName
+        action: copy
+        target: Brand.brandName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: websiteUrl
+        action: copy
+        target: Brand.websiteUrl
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Category
+    action: keep
+    target: Category
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Category.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: categorySlug
+        action: copy
+        target: Category.categorySlug
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Category.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: parentId
+        action: copy
+        target: Category.parentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Product
+    action: keep
+    target: Product
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Product.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: productNumber
+        action: copy
+        target: Product.productNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Product.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: details
+        action: copy
+        target: Product.details
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: imageUrl1
+        action: explode
+        target: ProductImage.imageUrl
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R3
+        reason: repeating group
+      - source: imageUrl2
+        action: explode
+        target: ProductImage.imageUrl
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R3
+        reason: repeating group
+      - source: imageUrl3
+        action: explode
+        target: ProductImage.imageUrl
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R3
+        reason: repeating group
+      - source: brandId
+        action: copy
+        target: Product.brandId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: copy
+        target: Product.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Product.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ProductDimensions
+    action: merge
+    target: Product
+    rules:
+      - R6
+    reason: 1:1 split of Product without blobs or secrets
+    dedupe: null
+    fields:
+      - source: id
+        action: move
+        target: Product.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: ids remapped via MigrationIdMap
+      - source: productId
+        action: derive_away
+        target: null
+        transform: null
+        values: null
+        derivable_from: Product.id via product
+        decision: null
+        rules:
+          - R6
+        reason: null
+      - source: weightGrams
+        action: move
+        target: Product.weightGrams
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R6
+        reason: null
+      - source: lengthMm
+        action: move
+        target: Product.lengthMm
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R6
+        reason: null
+      - source: widthMm
+        action: move
+        target: Product.widthMm
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R6
+        reason: null
+      - source: heightMm
+        action: move
+        target: Product.heightMm
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R6
+        reason: null
+  - source: UnitOfMeasure
+    action: keep
+    target: UnitOfMeasure
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: UnitOfMeasure.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: uomCode
+        action: copy
+        target: UnitOfMeasure.uomCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: UnitOfMeasure.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ProductVariant
+    action: keep
+    target: ProductVariant
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: ProductVariant.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: productId
+        action: copy
+        target: ProductVariant.productId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: sku
+        action: copy
+        target: ProductVariant.sku
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: variantLabel
+        action: copy
+        target: ProductVariant.variantLabel
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: price
+        action: copy
+        target: ProductVariant.price
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: uomId
+        action: copy
+        target: ProductVariant.uomId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: copy
+        target: ProductVariant.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ProductCategory
+    action: keep
+    target: ProductCategory
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: productId
+        action: copy
+        target: ProductCategory.productId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: categoryId
+        action: copy
+        target: ProductCategory.categoryId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: AttributeDefinition
+    action: keep
+    target: AttributeDefinition
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: AttributeDefinition.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: attributeKey
+        action: copy
+        target: AttributeDefinition.attributeKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: AttributeDefinition.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: valueKind
+        action: copy
+        target: AttributeDefinition.valueKind
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ProductAttributeValue
+    action: keep
+    target: ProductAttributeValue
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: ProductAttributeValue.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: productId
+        action: copy
+        target: ProductAttributeValue.productId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: attributeId
+        action: copy
+        target: ProductAttributeValue.attributeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: valueText
+        action: copy
+        target: ProductAttributeValue.valueText
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Tag
+    action: keep
+    target: Tag
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Tag.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: tagText
+        action: copy
+        target: Tag.tagText
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ProductTag
+    action: keep
+    target: ProductTag
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: productId
+        action: copy
+        target: ProductTag.productId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: tagId
+        action: copy
+        target: ProductTag.tagId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PriceList
+    action: keep
+    target: PriceList
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PriceList.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: PriceList.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: currencyId
+        action: copy
+        target: PriceList.currencyId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: validFrom
+        action: copy
+        target: PriceList.validFrom
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: validUntil
+        action: copy
+        target: PriceList.validUntil
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PriceListEntry
+    action: keep
+    target: PriceListEntry
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PriceListEntry.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: priceListId
+        action: copy
+        target: PriceListEntry.priceListId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: productVariantId
+        action: copy
+        target: PriceListEntry.productVariantId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: unitPrice
+        action: copy
+        target: PriceListEntry.unitPrice
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Warehouse
+    action: keep
+    target: Warehouse
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Warehouse.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: warehouseCode
+        action: copy
+        target: Warehouse.warehouseCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Warehouse.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: street
+        action: copy
+        target: Warehouse.street
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: city
+        action: copy
+        target: Warehouse.city
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: postalCode
+        action: copy
+        target: Warehouse.postalCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: StorageLocation
+    action: keep
+    target: StorageLocation
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: StorageLocation.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: warehouseId
+        action: copy
+        target: StorageLocation.warehouseId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: locationCode
+        action: copy
+        target: StorageLocation.locationCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: StockLevel
+    action: keep
+    target: StockLevel
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: StockLevel.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: productVariantId
+        action: copy
+        target: StockLevel.productVariantId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: storageLocationId
+        action: copy
+        target: StockLevel.storageLocationId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: quantityOnHand
+        action: copy
+        target: StockLevel.quantityOnHand
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: quantityReserved
+        action: copy
+        target: StockLevel.quantityReserved
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: StockMovement
+    action: keep
+    target: StockMovement
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: StockMovement.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: productVariantId
+        action: copy
+        target: StockMovement.productVariantId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: fromLocationId
+        action: copy
+        target: StockMovement.fromLocationId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: toLocationId
+        action: copy
+        target: StockMovement.toLocationId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: movementKind
+        action: copy
+        target: StockMovement.movementKind
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: quantity
+        action: copy
+        target: StockMovement.quantity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: movedAt
+        action: copy
+        target: StockMovement.movedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Stocktake
+    action: keep
+    target: Stocktake
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Stocktake.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: warehouseId
+        action: copy
+        target: Stocktake.warehouseId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: countedOn
+        action: copy
+        target: Stocktake.countedOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: status
+        action: copy
+        target: Stocktake.status
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: StocktakeLine
+    action: keep
+    target: StocktakeLine
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: StocktakeLine.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: stocktakeId
+        action: copy
+        target: StocktakeLine.stocktakeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: warehouseId
+        action: derive_away
+        target: null
+        transform: null
+        values: null
+        derivable_from: Stocktake.warehouseId via stocktake
+        decision: null
+        rules:
+          - R8
+        reason: redundant path, agrees in all rows
+      - source: productVariantId
+        action: copy
+        target: StocktakeLine.productVariantId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R14
+        reason: FK without index
+      - source: expectedQuantity
+        action: copy
+        target: StocktakeLine.expectedQuantity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: countedQuantity
+        action: copy
+        target: StocktakeLine.countedQuantity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Supplier
+    action: keep
+    target: Supplier
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Supplier.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: supplierCode
+        action: copy
+        target: Supplier.supplierCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: companyName
+        action: copy
+        target: Supplier.companyName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: contactEmail
+        action: copy
+        target: Supplier.contactEmail
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: phone
+        action: copy
+        target: Supplier.phone
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paymentTermId
+        action: copy
+        target: Supplier.paymentTermId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: websiteUrl
+        action: copy
+        target: Supplier.websiteUrl
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: ratingScore
+        action: copy
+        target: Supplier.ratingScore
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: copy
+        target: Supplier.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Supplier.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Vendor
+    action: merge
+    target: Supplier
+    rules:
+      - R5
+    reason: "same concept as Supplier: 7 shared fields and shared supplierCode values"
+    dedupe:
+      key:
+        - supplierCode
+      winner: oldest_created_at
+    fields:
+      - source: id
+        action: move
+        target: Supplier.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: ids remapped via MigrationIdMap
+      - source: supplierCode
+        action: move
+        target: Supplier.supplierCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: companyName
+        action: move
+        target: Supplier.companyName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: contactEmail
+        action: move
+        target: Supplier.contactEmail
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: phone
+        action: move
+        target: Supplier.phone
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paymentTermId
+        action: move
+        target: Supplier.paymentTermId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: move
+        target: Supplier.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: move
+        target: Supplier.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PurchaseOrder
+    action: keep
+    target: PurchaseOrder
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PurchaseOrder.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: purchaseOrderNumber
+        action: copy
+        target: PurchaseOrder.purchaseOrderNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: supplierId
+        action: copy
+        target: PurchaseOrder.supplierId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: warehouseId
+        action: copy
+        target: PurchaseOrder.warehouseId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: status
+        action: transform
+        target: PurchaseOrder.status
+        transform: map_enum
+        values:
+          " Draft": DRAFT
+          " Sent": SENT
+          "CANCELLED ": CANCELLED
+          CONFIRMED: CONFIRMED
+          Confirmed: CONFIRMED
+          Draft: DRAFT
+          Received: RECEIVED
+          SENT: SENT
+          Sent: SENT
+          cancelled: CANCELLED
+          "cancelled ": CANCELLED
+          "confirmed ": CONFIRMED
+          draft: DRAFT
+          received: RECEIVED
+          "received ": RECEIVED
+          sent: SENT
+        derivable_from: null
+        decision: null
+        rules:
+          - R10
+        reason: closed set with case/whitespace variants
+      - source: orderedAt
+        action: copy
+        target: PurchaseOrder.orderedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R12
+        reason: never null
+      - source: expectedOn
+        action: copy
+        target: PurchaseOrder.expectedOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PurchaseOrderLine
+    action: keep
+    target: PurchaseOrderLine
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PurchaseOrderLine.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: purchaseOrderId
+        action: copy
+        target: PurchaseOrderLine.purchaseOrderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: productVariantId
+        action: copy
+        target: PurchaseOrderLine.productVariantId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: orderedQuantity
+        action: copy
+        target: PurchaseOrderLine.orderedQuantity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: AMB-4
+        rules:
+          - R11
+        reason: ambiguous; kept
+      - source: unitCost
+        action: copy
+        target: PurchaseOrderLine.unitCost
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: SalesChannel
+    action: keep
+    target: SalesChannel
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: SalesChannel.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: channelKey
+        action: copy
+        target: SalesChannel.channelKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: SalesChannel.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Cart
+    action: keep
+    target: Cart
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Cart.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: Cart.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: salesChannelId
+        action: copy
+        target: Cart.salesChannelId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: itemCount
+        action: derive_away
+        target: null
+        transform: null
+        values: null
+        derivable_from: count(CartItem) via cartItems
+        decision: null
+        rules:
+          - R17
+        reason: cached count on a mutable record
+      - source: createdAt
+        action: copy
+        target: Cart.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: updatedAt
+        action: copy
+        target: Cart.updatedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: CartItem
+    action: keep
+    target: CartItem
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: CartItem.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: cartId
+        action: copy
+        target: CartItem.cartId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: productVariantId
+        action: copy
+        target: CartItem.productVariantId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: quantity
+        action: copy
+        target: CartItem.quantity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: addedAt
+        action: copy
+        target: CartItem.addedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: SalesOrder
+    action: keep
+    target: SalesOrder
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: SalesOrder.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: orderReference
+        action: copy
+        target: SalesOrder.orderReference
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: SalesOrder.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: salesChannelId
+        action: copy
+        target: SalesOrder.salesChannelId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: status
+        action: copy
+        target: SalesOrder.status
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: placedAt
+        action: copy
+        target: SalesOrder.placedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: currencyId
+        action: copy
+        target: SalesOrder.currencyId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: shippingAddressId
+        action: copy
+        target: SalesOrder.shippingAddressId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: OrderItem
+    action: keep
+    target: OrderItem
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: OrderItem.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: salesOrderId
+        action: copy
+        target: OrderItem.salesOrderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: productVariantId
+        action: copy
+        target: OrderItem.productVariantId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: quantity
+        action: copy
+        target: OrderItem.quantity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: unitPrice
+        action: copy
+        target: OrderItem.unitPrice
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-1
+        rules:
+          - R16
+        reason: variant price at the moment the order was placed
+  - source: Discount
+    action: keep
+    target: Discount
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Discount.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: discountCode
+        action: copy
+        target: Discount.discountCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: percentOff
+        action: copy
+        target: Discount.percentOff
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: amountOff
+        action: copy
+        target: Discount.amountOff
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: validFrom
+        action: copy
+        target: Discount.validFrom
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: validUntil
+        action: copy
+        target: Discount.validUntil
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: DiscountRedemption
+    action: keep
+    target: DiscountRedemption
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: DiscountRedemption.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: discountId
+        action: copy
+        target: DiscountRedemption.discountId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: salesOrderId
+        action: copy
+        target: DiscountRedemption.salesOrderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: amountApplied
+        action: copy
+        target: DiscountRedemption.amountApplied
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: redeemedAt
+        action: copy
+        target: DiscountRedemption.redeemedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ReturnRequest
+    action: keep
+    target: ReturnRequest
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: ReturnRequest.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: returnReference
+        action: copy
+        target: ReturnRequest.returnReference
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: salesOrderId
+        action: copy
+        target: ReturnRequest.salesOrderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: status
+        action: copy
+        target: ReturnRequest.status
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: requestedAt
+        action: copy
+        target: ReturnRequest.requestedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ReturnItem
+    action: keep
+    target: ReturnItem
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: ReturnItem.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: returnRequestId
+        action: copy
+        target: ReturnItem.returnRequestId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: orderItemId
+        action: copy
+        target: ReturnItem.orderItemId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: quantity
+        action: copy
+        target: ReturnItem.quantity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: conditionNote
+        action: copy
+        target: ReturnItem.conditionNote
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: OrderStatusChange
+    action: keep
+    target: OrderStatusChange
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: OrderStatusChange.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: salesOrderId
+        action: copy
+        target: OrderStatusChange.salesOrderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: fromStatus
+        action: copy
+        target: OrderStatusChange.fromStatus
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: toStatus
+        action: copy
+        target: OrderStatusChange.toStatus
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: changedAt
+        action: copy
+        target: OrderStatusChange.changedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Currency
+    action: keep
+    target: Currency
+    rules:
+      - R13
+    reason: exact duplicates on isoCode
+    dedupe:
+      key:
+        - isoCode
+      winner: oldest_created_at
+    fields:
+      - source: id
+        action: copy
+        target: Currency.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isoCode
+        action: copy
+        target: Currency.isoCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R13
+        reason: natural key
+      - source: title
+        action: copy
+        target: Currency.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: minorUnits
+        action: copy
+        target: Currency.minorUnits
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Currency.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: TaxRate
+    action: keep
+    target: TaxRate
+    rules:
+      - R13
+    reason: exact duplicates on taxCode
+    dedupe:
+      key:
+        - taxCode
+      winner: most_complete
+    fields:
+      - source: id
+        action: copy
+        target: TaxRate.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: taxCode
+        action: copy
+        target: TaxRate.taxCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R13
+        reason: natural key
+      - source: title
+        action: copy
+        target: TaxRate.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: ratePercent
+        action: copy
+        target: TaxRate.ratePercent
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: validFrom
+        action: copy
+        target: TaxRate.validFrom
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PaymentTerm
+    action: keep
+    target: PaymentTerm
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PaymentTerm.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: termCode
+        action: copy
+        target: PaymentTerm.termCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: PaymentTerm.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: netDays
+        action: copy
+        target: PaymentTerm.netDays
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: BillingAccount
+    action: keep
+    target: BillingAccount
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: BillingAccount.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: accountReference
+        action: copy
+        target: BillingAccount.accountReference
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: BillingAccount.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paymentTermId
+        action: copy
+        target: BillingAccount.paymentTermId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: invoiceEmail
+        action: copy
+        target: BillingAccount.invoiceEmail
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Invoice
+    action: keep
+    target: Invoice
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Invoice.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: invoiceNumber
+        action: copy
+        target: Invoice.invoiceNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: billingAccountId
+        action: copy
+        target: Invoice.billingAccountId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: salesOrderId
+        action: copy
+        target: Invoice.salesOrderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: currencyId
+        action: copy
+        target: Invoice.currencyId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: status
+        action: copy
+        target: Invoice.status
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: issuedOn
+        action: copy
+        target: Invoice.issuedOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: dueOn
+        action: copy
+        target: Invoice.dueOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: billingName
+        action: copy
+        target: Invoice.billingName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-3
+        rules:
+          - R16
+        reason: billing party as printed on the issued invoice
+      - source: billingStreet
+        action: copy
+        target: Invoice.billingStreet
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-3
+        rules:
+          - R16
+        reason: billing party as printed on the issued invoice
+      - source: billingPostalCode
+        action: copy
+        target: Invoice.billingPostalCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-3
+        rules:
+          - R16
+        reason: billing party as printed on the issued invoice
+      - source: billingCity
+        action: copy
+        target: Invoice.billingCity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-3
+        rules:
+          - R16
+        reason: billing party as printed on the issued invoice
+      - source: totalNet
+        action: copy
+        target: Invoice.totalNet
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-4
+        rules:
+          - R16
+        reason: invoice totals as issued, including rounding adjustments
+      - source: totalTax
+        action: copy
+        target: Invoice.totalTax
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-4
+        rules:
+          - R16
+        reason: invoice totals as issued, including rounding adjustments
+      - source: totalGross
+        action: copy
+        target: Invoice.totalGross
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-4
+        rules:
+          - R16
+        reason: invoice totals as issued, including rounding adjustments
+  - source: InvoiceLine
+    action: keep
+    target: InvoiceLine
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: InvoiceLine.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: invoiceId
+        action: copy
+        target: InvoiceLine.invoiceId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: lineText
+        action: copy
+        target: InvoiceLine.lineText
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: quantity
+        action: copy
+        target: InvoiceLine.quantity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: unitPrice
+        action: copy
+        target: InvoiceLine.unitPrice
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: taxRateId
+        action: copy
+        target: InvoiceLine.taxRateId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: CreditNote
+    action: keep
+    target: CreditNote
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: CreditNote.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: creditNoteNumber
+        action: copy
+        target: CreditNote.creditNoteNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: invoiceId
+        action: copy
+        target: CreditNote.invoiceId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: issuedOn
+        action: copy
+        target: CreditNote.issuedOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: memo
+        action: copy
+        target: CreditNote.memo
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: CreditNoteLine
+    action: keep
+    target: CreditNoteLine
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: CreditNoteLine.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: creditNoteId
+        action: copy
+        target: CreditNoteLine.creditNoteId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: lineText
+        action: copy
+        target: CreditNoteLine.lineText
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: amount
+        action: copy
+        target: CreditNoteLine.amount
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: DunningLevel
+    action: keep
+    target: DunningLevel
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: DunningLevel.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: levelNumber
+        action: copy
+        target: DunningLevel.levelNumber
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: DunningLevel.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: feeAmount
+        action: copy
+        target: DunningLevel.feeAmount
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: daysOverdue
+        action: copy
+        target: DunningLevel.daysOverdue
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: DunningNotice
+    action: keep
+    target: DunningNotice
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: DunningNotice.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: invoiceId
+        action: copy
+        target: DunningNotice.invoiceId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: dunningLevelId
+        action: copy
+        target: DunningNotice.dunningLevelId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: sentAt
+        action: copy
+        target: DunningNotice.sentAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PaymentProvider
+    action: keep
+    target: PaymentProvider
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PaymentProvider.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: providerKey
+        action: copy
+        target: PaymentProvider.providerKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: PaymentProvider.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PaymentMethod
+    action: keep
+    target: PaymentMethod
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PaymentMethod.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: billingAccountId
+        action: copy
+        target: PaymentMethod.billingAccountId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paymentProviderId
+        action: copy
+        target: PaymentMethod.paymentProviderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: methodKind
+        action: copy
+        target: PaymentMethod.methodKind
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: maskedReference
+        action: copy
+        target: PaymentMethod.maskedReference
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isDefault
+        action: copy
+        target: PaymentMethod.isDefault
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Payment
+    action: keep
+    target: Payment
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Payment.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paymentReference
+        action: copy
+        target: Payment.paymentReference
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: billingAccountId
+        action: copy
+        target: Payment.billingAccountId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paymentMethodId
+        action: copy
+        target: Payment.paymentMethodId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: amount
+        action: copy
+        target: Payment.amount
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: currencyId
+        action: copy
+        target: Payment.currencyId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: status
+        action: copy
+        target: Payment.status
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: receivedAt
+        action: copy
+        target: Payment.receivedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: PaymentAllocation
+    action: keep
+    target: PaymentAllocation
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: PaymentAllocation.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paymentId
+        action: copy
+        target: PaymentAllocation.paymentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: invoiceId
+        action: copy
+        target: PaymentAllocation.invoiceId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: allocatedAmount
+        action: copy
+        target: PaymentAllocation.allocatedAmount
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Refund
+    action: keep
+    target: Refund
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Refund.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paymentId
+        action: copy
+        target: Refund.paymentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: amount
+        action: copy
+        target: Refund.amount
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: refundNote
+        action: copy
+        target: Refund.refundNote
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: refundedAt
+        action: copy
+        target: Refund.refundedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Payout
+    action: keep
+    target: Payout
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Payout.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: payoutReference
+        action: copy
+        target: Payout.payoutReference
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paymentProviderId
+        action: copy
+        target: Payout.paymentProviderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: amount
+        action: copy
+        target: Payout.amount
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: currencyId
+        action: copy
+        target: Payout.currencyId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: paidOutAt
+        action: copy
+        target: Payout.paidOutAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Carrier
+    action: keep
+    target: Carrier
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Carrier.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: carrierCode
+        action: copy
+        target: Carrier.carrierCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: AMB-3
+        rules:
+          - R13
+        reason: ambiguous; kept
+      - source: title
+        action: copy
+        target: Carrier.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: trackingUrlTemplate
+        action: copy
+        target: Carrier.trackingUrlTemplate
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: CarrierService
+    action: keep
+    target: CarrierService
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: CarrierService.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: carrierId
+        action: copy
+        target: CarrierService.carrierId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: serviceCode
+        action: copy
+        target: CarrierService.serviceCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: CarrierService.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ShippingZone
+    action: keep
+    target: ShippingZone
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: ShippingZone.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: zoneCode
+        action: copy
+        target: ShippingZone.zoneCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: ShippingZone.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ShippingRate
+    action: keep
+    target: ShippingRate
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: ShippingRate.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: shippingZoneId
+        action: copy
+        target: ShippingRate.shippingZoneId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: carrierServiceId
+        action: copy
+        target: ShippingRate.carrierServiceId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: maxWeightGrams
+        action: copy
+        target: ShippingRate.maxWeightGrams
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: price
+        action: transform
+        target: ShippingRate.price
+        transform: cast_decimal
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R11
+        reason: every value parses unambiguously
+  - source: Shipment
+    action: keep
+    target: Shipment
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Shipment.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: salesOrderId
+        action: copy
+        target: Shipment.salesOrderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: carrierServiceId
+        action: copy
+        target: Shipment.carrierServiceId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerAddressId
+        action: copy
+        target: Shipment.customerAddressId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: trackingCode
+        action: copy
+        target: Shipment.trackingCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: shippedAt
+        action: copy
+        target: Shipment.shippedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: shipToName
+        action: copy
+        target: Shipment.shipToName
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-2
+        rules:
+          - R16
+        reason: recipient and delivery address printed on the label at dispatch
+      - source: shipToStreet
+        action: copy
+        target: Shipment.shipToStreet
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-2
+        rules:
+          - R16
+        reason: recipient and delivery address printed on the label at dispatch
+      - source: shipToPostalCode
+        action: copy
+        target: Shipment.shipToPostalCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-2
+        rules:
+          - R16
+        reason: recipient and delivery address printed on the label at dispatch
+      - source: shipToCity
+        action: copy
+        target: Shipment.shipToCity
+        transform: null
+        values: null
+        derivable_from: null
+        decision: SNAP-2
+        rules:
+          - R16
+        reason: recipient and delivery address printed on the label at dispatch
+  - source: Parcel
+    action: keep
+    target: Parcel
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Parcel.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: weightGrams
+        action: copy
+        target: Parcel.weightGrams
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: parcelLabel
+        action: copy
+        target: Parcel.parcelLabel
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: ShipmentParcel
+    action: merge
+    target: Parcel
+    rules:
+      - R9
+    reason: each Parcel has exactly one Shipment
+    dedupe: null
+    fields:
+      - source: shipmentId
+        action: move
+        target: Parcel.shipmentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R9
+        reason: null
+      - source: parcelId
+        action: derive_away
+        target: null
+        transform: null
+        values: null
+        derivable_from: Parcel.id via parcel
+        decision: null
+        rules:
+          - R9
+        reason: null
+  - source: TrackingEvent
+    action: keep
+    target: TrackingEvent
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: TrackingEvent.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: parcelId
+        action: copy
+        target: TrackingEvent.parcelId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R7
+          - R14
+        reason: id-like scalar referencing Parcel
+      - source: carrierId
+        action: copy
+        target: TrackingEvent.carrierId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: eventKind
+        action: copy
+        target: TrackingEvent.eventKind
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: occurredAt
+        action: copy
+        target: TrackingEvent.occurredAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: locationText
+        action: copy
+        target: TrackingEvent.locationText
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: DeliveryAttempt
+    action: keep
+    target: DeliveryAttempt
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: DeliveryAttempt.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: shipmentId
+        action: copy
+        target: DeliveryAttempt.shipmentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: attemptedAt
+        action: copy
+        target: DeliveryAttempt.attemptedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: succeeded
+        action: copy
+        target: DeliveryAttempt.succeeded
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: failureNote
+        action: copy
+        target: DeliveryAttempt.failureNote
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: SupportQueue
+    action: keep
+    target: SupportQueue
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: SupportQueue.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: queueKey
+        action: copy
+        target: SupportQueue.queueKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: SupportQueue.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: SlaPolicy
+    action: keep
+    target: SlaPolicy
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: SlaPolicy.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: SlaPolicy.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: firstResponseMinutes
+        action: copy
+        target: SlaPolicy.firstResponseMinutes
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: resolutionMinutes
+        action: copy
+        target: SlaPolicy.resolutionMinutes
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: TicketCategory
+    action: keep
+    target: TicketCategory
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: TicketCategory.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: TicketCategory.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: parentId
+        action: copy
+        target: TicketCategory.parentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: TicketLabel
+    action: keep
+    target: TicketLabel
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: TicketLabel.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: labelText
+        action: copy
+        target: TicketLabel.labelText
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: colorHex
+        action: copy
+        target: TicketLabel.colorHex
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdById
+        action: copy
+        target: TicketLabel.createdById
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Ticket
+    action: keep
+    target: Ticket
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Ticket.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: ticketReference
+        action: copy
+        target: Ticket.ticketReference
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: subject
+        action: copy
+        target: Ticket.subject
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: Ticket.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: queueId
+        action: copy
+        target: Ticket.queueId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: categoryId
+        action: copy
+        target: Ticket.categoryId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: slaPolicyId
+        action: copy
+        target: Ticket.slaPolicyId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: assigneeId
+        action: copy
+        target: Ticket.assigneeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: status
+        action: transform
+        target: Ticket.status
+        transform: map_enum
+        values:
+          " Open": OPEN
+          " Waiting": WAITING
+          CLOSED: CLOSED
+          "CLOSED ": CLOSED
+          Closed: CLOSED
+          IN_PROGRESS: IN_PROGRESS
+          In_Progress: IN_PROGRESS
+          OPEN: OPEN
+          Open: OPEN
+          RESOLVED: RESOLVED
+          "RESOLVED ": RESOLVED
+          "WAITING ": WAITING
+          Waiting: WAITING
+          closed: CLOSED
+          in_progress: IN_PROGRESS
+          "in_progress ": IN_PROGRESS
+          open: OPEN
+          "open ": OPEN
+          "resolved ": RESOLVED
+          waiting: WAITING
+          "waiting ": WAITING
+        derivable_from: null
+        decision: null
+        rules:
+          - R10
+        reason: closed set with case/whitespace variants
+      - source: labelIds
+        action: explode
+        target: TicketLabelAssignment.labelId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R2
+        reason: comma-separated TicketLabel ids
+      - source: createdAt
+        action: copy
+        target: Ticket.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R12
+        reason: never null
+      - source: resolvedAt
+        action: copy
+        target: Ticket.resolvedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: TicketMessage
+    action: keep
+    target: TicketMessage
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: TicketMessage.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: ticketId
+        action: copy
+        target: TicketMessage.ticketId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: authorEmployeeId
+        action: copy
+        target: TicketMessage.authorEmployeeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: body
+        action: copy
+        target: TicketMessage.body
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isInternal
+        action: copy
+        target: TicketMessage.isInternal
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: sentAt
+        action: copy
+        target: TicketMessage.sentAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: CannedResponses
+    action: rename
+    target: CannedResponse
+    rules:
+      - R15
+    reason: naming convention; physical name kept via @@map
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: CannedResponse.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: queue_id
+        action: copy
+        target: CannedResponse.queueId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R15
+        reason: camelCase via @map
+      - source: title
+        action: copy
+        target: CannedResponse.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: response_body
+        action: copy
+        target: CannedResponse.responseBody
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R15
+        reason: camelCase via @map
+      - source: is_active
+        action: copy
+        target: CannedResponse.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R15
+        reason: camelCase via @map
+  - source: ProjectTemplate
+    action: keep
+    target: ProjectTemplate
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: ProjectTemplate.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: ProjectTemplate.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: details
+        action: copy
+        target: ProjectTemplate.details
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Project
+    action: keep
+    target: Project
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Project.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: projectCode
+        action: copy
+        target: Project.projectCode
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Project.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: Project.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: templateId
+        action: copy
+        target: Project.templateId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: startsOn
+        action: copy
+        target: Project.startsOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: endsOn
+        action: copy
+        target: Project.endsOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: budget
+        action: copy
+        target: Project.budget
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: milestones
+        action: explode
+        target: Milestone.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R18
+        reason: array of entity-like objects
+  - source: ProjectMember
+    action: keep
+    target: ProjectMember
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: projectId
+        action: copy
+        target: ProjectMember.projectId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: employeeId
+        action: copy
+        target: ProjectMember.employeeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: projectRole
+        action: copy
+        target: ProjectMember.projectRole
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Task
+    action: keep
+    target: Task
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Task.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: projectId
+        action: copy
+        target: Task.projectId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: projectTitle
+        action: derive_away
+        target: null
+        transform: null
+        values: null
+        derivable_from: Project.title via project
+        decision: null
+        rules:
+          - R4
+        reason: always equals Project.title
+      - source: title
+        action: copy
+        target: Task.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: details
+        action: copy
+        target: Task.details
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: assigneeId
+        action: copy
+        target: Task.assigneeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: dueOn
+        action: copy
+        target: Task.dueOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isDone
+        action: copy
+        target: Task.isDone
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Task.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: TaskDependency
+    action: keep
+    target: TaskDependency
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: taskId
+        action: copy
+        target: TaskDependency.taskId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: dependsOnTaskId
+        action: copy
+        target: TaskDependency.dependsOnTaskId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: TaskComment
+    action: keep
+    target: TaskComment
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: TaskComment.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: taskId
+        action: copy
+        target: TaskComment.taskId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: authorId
+        action: copy
+        target: TaskComment.authorId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: body
+        action: copy
+        target: TaskComment.body
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: TaskComment.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: TimeEntry
+    action: keep
+    target: TimeEntry
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: TimeEntry.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: taskId
+        action: copy
+        target: TimeEntry.taskId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: projectId
+        action: derive_away
+        target: null
+        transform: null
+        values: null
+        derivable_from: Task.projectId via task
+        decision: null
+        rules:
+          - R8
+        reason: redundant path, agrees in all rows
+      - source: employeeId
+        action: copy
+        target: TimeEntry.employeeId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R14
+        reason: FK without index
+      - source: workDate
+        action: copy
+        target: TimeEntry.workDate
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: minutes
+        action: copy
+        target: TimeEntry.minutes
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: note
+        action: copy
+        target: TimeEntry.note
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Segment
+    action: keep
+    target: Segment
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Segment.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Segment.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: details
+        action: copy
+        target: Segment.details
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdById
+        action: copy
+        target: Segment.createdById
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: SegmentMembership
+    action: keep
+    target: SegmentMembership
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: segmentId
+        action: copy
+        target: SegmentMembership.segmentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: customerId
+        action: copy
+        target: SegmentMembership.customerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: addedAt
+        action: copy
+        target: SegmentMembership.addedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Campaign
+    action: keep
+    target: Campaign
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Campaign.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Campaign.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: startsOn
+        action: copy
+        target: Campaign.startsOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: endsOn
+        action: copy
+        target: Campaign.endsOn
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: budget
+        action: copy
+        target: Campaign.budget
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: segmentIds
+        action: explode
+        target: CampaignSegment.segmentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R2
+        reason: comma-separated Segment ids
+      - source: ownerId
+        action: copy
+        target: Campaign.ownerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: emailTemplateId
+        action: copy
+        target: Campaign.emailTemplateId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: EmailTemplate
+    action: keep
+    target: EmailTemplate
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: EmailTemplate.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: templateKey
+        action: copy
+        target: EmailTemplate.templateKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: EmailTemplate.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: subject
+        action: copy
+        target: EmailTemplate.subject
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: bodyHtml
+        action: copy
+        target: EmailTemplate.bodyHtml
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: copy
+        target: EmailTemplate.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: EmailTemplate.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdById
+        action: copy
+        target: EmailTemplate.createdById
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Newsletter
+    action: keep
+    target: Newsletter
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Newsletter.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Newsletter.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: details
+        action: copy
+        target: Newsletter.details
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: copy
+        target: Newsletter.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Newsletter.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: NewsletterSubscription
+    action: keep
+    target: NewsletterSubscription
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: NewsletterSubscription.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: newsletterId
+        action: copy
+        target: NewsletterSubscription.newsletterId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: contactId
+        action: copy
+        target: NewsletterSubscription.contactId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: subscribedAt
+        action: copy
+        target: NewsletterSubscription.subscribedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: unsubscribedAt
+        action: copy
+        target: NewsletterSubscription.unsubscribedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: doubleOptIn
+        action: transform
+        target: NewsletterSubscription.doubleOptIn
+        transform: cast_boolean
+        values: null
+        derivable_from: null
+        decision: null
+        rules:
+          - R11
+        reason: every value parses unambiguously
+  - source: MarketingConsent
+    action: keep
+    target: MarketingConsent
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: MarketingConsent.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: contactId
+        action: copy
+        target: MarketingConsent.contactId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: consentPurpose
+        action: copy
+        target: MarketingConsent.consentPurpose
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: grantedAt
+        action: copy
+        target: MarketingConsent.grantedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: revokedAt
+        action: copy
+        target: MarketingConsent.revokedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Folder
+    action: keep
+    target: Folder
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Folder.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Folder.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: parentId
+        action: copy
+        target: Folder.parentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: ownerId
+        action: copy
+        target: Folder.ownerId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Document
+    action: keep
+    target: Document
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Document.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: folderId
+        action: copy
+        target: Document.folderId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Document.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdById
+        action: copy
+        target: Document.createdById
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Document.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: archivedAt
+        action: copy
+        target: Document.archivedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: DocumentVersion
+    action: keep
+    target: DocumentVersion
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: DocumentVersion.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: documentId
+        action: copy
+        target: DocumentVersion.documentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: revision
+        action: copy
+        target: DocumentVersion.revision
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: storageKey
+        action: copy
+        target: DocumentVersion.storageKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: byteSize
+        action: copy
+        target: DocumentVersion.byteSize
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: checksumSha256
+        action: copy
+        target: DocumentVersion.checksumSha256
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: uploadedById
+        action: copy
+        target: DocumentVersion.uploadedById
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: uploadedAt
+        action: copy
+        target: DocumentVersion.uploadedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: DocumentShare
+    action: keep
+    target: DocumentShare
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: DocumentShare.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: documentId
+        action: copy
+        target: DocumentShare.documentId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: sharedWithUserId
+        action: copy
+        target: DocumentShare.sharedWithUserId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: canEdit
+        action: copy
+        target: DocumentShare.canEdit
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: sharedAt
+        action: copy
+        target: DocumentShare.sharedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: AuditEvent
+    action: keep
+    target: AuditEvent
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: AuditEvent.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: actorUserId
+        action: copy
+        target: AuditEvent.actorUserId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: eventKey
+        action: copy
+        target: AuditEvent.eventKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: payload
+        action: copy
+        target: AuditEvent.payload
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: occurredAt
+        action: copy
+        target: AuditEvent.occurredAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: NotificationTemplate
+    action: keep
+    target: NotificationTemplate
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: NotificationTemplate.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: templateKey
+        action: copy
+        target: NotificationTemplate.templateKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: NotificationTemplate.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: subject
+        action: copy
+        target: NotificationTemplate.subject
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: bodyText
+        action: copy
+        target: NotificationTemplate.bodyText
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: copy
+        target: NotificationTemplate.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: NotificationTemplate.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: channel
+        action: copy
+        target: NotificationTemplate.channel
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Notification
+    action: keep
+    target: Notification
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Notification.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: userId
+        action: copy
+        target: Notification.userId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: templateId
+        action: copy
+        target: Notification.templateId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: title
+        action: copy
+        target: Notification.title
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: readAt
+        action: copy
+        target: Notification.readAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdAt
+        action: copy
+        target: Notification.createdAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: NotificationPreference
+    action: keep
+    target: NotificationPreference
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: NotificationPreference.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: userId
+        action: copy
+        target: NotificationPreference.userId
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: channel
+        action: copy
+        target: NotificationPreference.channel
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isEnabled
+        action: copy
+        target: NotificationPreference.isEnabled
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: AppSetting
+    action: keep
+    target: AppSetting
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: AppSetting.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: settingKey
+        action: copy
+        target: AppSetting.settingKey
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: configData
+        action: copy
+        target: AppSetting.configData
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: updatedAt
+        action: copy
+        target: AppSetting.updatedAt
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: updatedById
+        action: copy
+        target: AppSetting.updatedById
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+  - source: Webhook
+    action: keep
+    target: Webhook
+    rules: []
+    reason: null
+    dedupe: null
+    fields:
+      - source: id
+        action: copy
+        target: Webhook.id
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: targetUrl
+        action: copy
+        target: Webhook.targetUrl
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: secretHash
+        action: copy
+        target: Webhook.secretHash
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: isActive
+        action: copy
+        target: Webhook.isActive
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+      - source: createdById
+        action: copy
+        target: Webhook.createdById
+        transform: null
+        values: null
+        derivable_from: null
+        decision: null
+        rules: []
+        reason: null
+new_models:
+  - name: TicketLabelAssignment
+    rules:
+      - R2
+    filled_from:
+      - Ticket.labelIds
+  - name: CampaignSegment
+    rules:
+      - R2
+    filled_from:
+      - Campaign.segmentIds
+  - name: ContactPhone
+    rules:
+      - R3
+    filled_from:
+      - Contact.phone1
+      - Contact.phone2
+      - Contact.phone3
+  - name: ProductImage
+    rules:
+      - R3
+    filled_from:
+      - Product.imageUrl1
+      - Product.imageUrl2
+      - Product.imageUrl3
+  - name: Milestone
+    rules:
+      - R18
+    filled_from:
+      - Project.milestones
+  - name: QuarantinedRow
+    rules: []
+    filled_from: []
+  - name: MigrationIdMap
+    rules: []
+    filled_from: []

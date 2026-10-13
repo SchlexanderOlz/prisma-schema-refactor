@@ -65,7 +65,10 @@ When the field is one of these kinds and has 0% nulls, apply the fix (see "Ambig
 Fields of other kinds (free-text notes, optional descriptions, contact data) stay optional.
 
 **R13 Natural uniqueness.** Candidate keys (email, sku, code, number, slug, external ids) with 0
-duplicates → `@unique`. Duplicates that are exact copies (all non-PK fields equal) → keep the
+duplicates → `@unique`. A candidate key identifies the record itself: the login email of an
+account, the sku of a product, the number of a document, an external system's id. Values that
+merely describe the record (contact, billing or notification addresses, telephone numbers, labels)
+are not keys even when they happen to be unique today; leave them alone. Duplicates that are exact copies (all non-PK fields equal) → keep the
 oldest, quarantine the rest (reason `duplicate_loser`), map the IDs. Duplicates with
 conflicting data → ambiguity, no unique.
 

@@ -61,8 +61,7 @@ type.
 **R12 Required when always present.** An optional field with 0% nulls whose meaning implies presence
 (names, foreign keys of owned children, timestamps, amounts) → required.
 Never make a field required if any row is null.
-When the field is one of these kinds and has 0% nulls, apply the fix; do not turn it into an
-ambiguity because some future row might hypothetically lack a value. The evidence is the data.
+When the field is one of these kinds and has 0% nulls, apply the fix (see "Ambiguity" below).
 Fields of other kinds (free-text notes, optional descriptions, contact data) stay optional.
 
 **R13 Natural uniqueness.** Candidate keys (email, sku, code, number, slug, external ids) with 0
@@ -85,6 +84,8 @@ Keep the field, add a doc comment `/// @snapshot: <reason>`, and log it in `deci
 This covers every value of that kind on such a record: copied names, addresses and prices, and
 also totals or other aggregates stored on it. When you identify a record as a dated document,
 go through all of its fields and document each copied or aggregated one.
+R16 is about copied attribute values. A foreign key that duplicates another relation path is
+governed by R8 (agreement decides), whatever kind of record it sits on.
 
 **R17 Derived values.** Values fully computable from other data on mutable records (cached counts,
 cached totals) → remove (`derive_away` with `derivable_from`). On historical documents → R16.
@@ -106,3 +107,9 @@ Log an ambiguity and use the safe default whenever:
 - any fix would need business knowledge you don't have
 
 Safe default: keep the source structure for that element unchanged.
+
+An ambiguity needs a concrete conflict you can point to in the schema or the data: rows that
+disagree, duplicates that conflict, values that don't parse, models whose meaning is unclear.
+A hypothetical future (a value that might one day be null, a versioning scheme that might be
+intended) is not evidence. When a rule's evidence holds, apply its fix; you may add the
+consideration to `assumptions`.

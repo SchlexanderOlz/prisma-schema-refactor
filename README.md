@@ -62,8 +62,11 @@ Add `--json` to any mode for machine-readable output. Exit codes: `0` MERGE-READ
 claude -p "/refactor-prisma-db --project prisma --out refactor-out" \
   --output-format json --max-turns 300 --permission-mode dontAsk \
   --allowedTools "Read,Write,Edit,Glob,Grep,Bash(npx prisma *),Bash(node *),Bash(npm --prefix *),Bash(psql *)" \
-  --add-dir <skill-dir> --no-session-persistence
+  --add-dir <skill-dir> --no-session-persistence --append-system-prompt "<sandbox note>"
 ```
+
+The sandbox note (`SANDBOX_NOTE` in `tests/run.ts`) tells the headless run which shell commands
+are allowed and that nobody can answer questions. It contains nothing about the fixtures.
 
 The run gets a 40-minute timeout. Its environment has `SCRATCH_DATABASE_URL` and a fake,
 unreachable `DATABASE_URL`, and no GitHub token. Scoring uses a separate `eval_<run>` database

@@ -26,6 +26,9 @@ model MigrationIdMap {
 }
 ```
 Every row whose primary key changes (merges, dedupe winners/losers) gets a MigrationIdMap row.
+`sourceModel` (in both models) is always the source model's name, never `<Model>.<field>`; put
+field context, such as the token that could not be resolved, into `payload`. In MigrationIdMap
+`targetModel` is the output model's name.
 
 ## mapping.yaml
 ```yaml
@@ -56,8 +59,12 @@ Semantics:
 - `copy` keeps values identical.
 - `move` keeps values identical in another model.
 - `transform` changes the representation.
-- `explode` turns one value into child rows.
+- `explode` turns one value into child rows. Any field whose values become rows of a new child
+  or join model is `explode`: delimited lists, Json arrays, and each field of a repeating group.
+- `move` is for values that land 1:1 on rows of an existing or merged model.
 - `drop` is allowed only with a `decision` reference.
+- In `decisions.yaml`, `quarantine[].source` is a source model name, matching
+  `QuarantinedRow.sourceModel`.
 
 ## decisions.yaml
 ```yaml

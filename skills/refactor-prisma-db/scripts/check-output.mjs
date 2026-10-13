@@ -177,6 +177,11 @@ if (decisions && tgt && mapping) {
       else if (!tf.docs.some((d) => d.includes('@snapshot'))) P(`${s.id}: ${m}.${f} lacks a "/// @snapshot: <reason>" doc comment`)
     }
   }
+  for (const qn of decisions.quarantine ?? []) if (!src.models.has(qn.source)) P(`decisions.yaml quarantine source "${qn.source}" must be a source model name (field context belongs in the QuarantinedRow payload)`)
+  const newModelNames = new Set((mapping.new_models ?? []).map((n) => n.name))
+  for (const mm of mapping.models) for (const fm of mm.fields) {
+    if (fm.action === 'move' && fm.target && newModelNames.has(fm.target.split('.')[0])) P(`${mm.source}.${fm.source}: values that become rows of the new model ${fm.target.split('.')[0]} are "explode", not "move"`)
+  }
   const ids = new Set([...(decisions.ambiguities ?? []).map((a) => a.id), ...(decisions.snapshots ?? []).map((s) => s.id)])
   for (const mm of mapping.models) for (const fm of mm.fields) if (fm.decision && !ids.has(fm.decision)) P(`${mm.source}.${fm.source}: decision ${fm.decision} not found in decisions.yaml`)
 }

@@ -1,1 +1,233 @@
-{}
+{
+  "version": 1,
+  "verdict": "MERGE-READY",
+  "reasons": [],
+  "notes": [
+    "no comparable baseline; regression checks skipped"
+  ],
+  "pr": 2,
+  "harnessHash": "3519c5a3a44f7026517bf184d031e809791e357c3c9164db63d9b05969355fea",
+  "fixtureHash": "62027068d6e740439d56853e1580627bbcb3c25e86b7543b2eed7b0204a32e52",
+  "runs": {
+    "expected": 5,
+    "completed": 5,
+    "ids": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  },
+  "selftest": "passed",
+  "harnessChange": {
+    "touched": false,
+    "labelOk": false
+  },
+  "gates": {
+    "H1": {
+      "perRun": [
+        "pass",
+        "pass",
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "ok": true,
+      "firstFailure": null
+    },
+    "H2": {
+      "perRun": [
+        "pass",
+        "pass",
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "ok": true,
+      "firstFailure": null
+    },
+    "H3": {
+      "perRun": [
+        "pass",
+        "pass",
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "ok": true,
+      "firstFailure": null
+    },
+    "H4": {
+      "perRun": [
+        "pass",
+        "pass",
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "ok": true,
+      "firstFailure": null
+    },
+    "H5": {
+      "perRun": [
+        "pass",
+        "pass",
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "ok": true,
+      "firstFailure": null
+    },
+    "H6": {
+      "perRun": [
+        "pass",
+        "pass",
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "ok": true,
+      "firstFailure": null
+    },
+    "H7": {
+      "perRun": [
+        "pass",
+        "pass",
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "ok": true,
+      "firstFailure": null
+    },
+    "H8": {
+      "perRun": [
+        "pass",
+        "pass",
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "ok": true,
+      "firstFailure": null
+    },
+    "H9": {
+      "perRun": [
+        "pass",
+        "pass",
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "ok": true,
+      "firstFailure": null
+    }
+  },
+  "metrics": {
+    "S1": {
+      "value": 1,
+      "perRun": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "min": 0.9,
+      "baseline": null,
+      "delta": null,
+      "maxDrop": 0.05,
+      "status": "ok"
+    },
+    "S2": {
+      "value": 1,
+      "perRun": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "min": 1,
+      "baseline": null,
+      "delta": null,
+      "maxDrop": 0,
+      "status": "ok"
+    },
+    "S3": {
+      "value": 1,
+      "perRun": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "min": 1,
+      "baseline": null,
+      "delta": null,
+      "maxDrop": 0,
+      "status": "ok"
+    },
+    "S4": {
+      "value": 1,
+      "perRun": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "min": 0.8,
+      "baseline": null,
+      "delta": null,
+      "maxDrop": 0.1,
+      "status": "ok"
+    },
+    "S5": {
+      "value": 1,
+      "perRun": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "min": 0.9,
+      "baseline": null,
+      "delta": null,
+      "maxDrop": 0.05,
+      "status": "ok"
+    },
+    "S6": {
+      "value": 1,
+      "perRun": [
+        1
+      ],
+      "min": 0.8,
+      "baseline": null,
+      "delta": null,
+      "maxDrop": 0.1,
+      "status": "ok"
+    }
+  },
+  "cost": {
+    "medianTokens": 3735189,
+    "medianWallMinutes": 7.4,
+    "medianTurns": 50,
+    "medianCostUsd": 1.66,
+    "baselineMedianTokens": null,
+    "tokenRatio": null,
+    "warn": false
+  },
+  "baseline": {
+    "comparable": false,
+    "reason": "no baseline",
+    "pr": null
+  },
+  "failingCases": [],
+  "failingCleanModels": [],
+  "mergeCommit": "3c99105f8379fc18e4f5db9ebbc5ce5084eae714"
+}

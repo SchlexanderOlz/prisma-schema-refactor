@@ -24,7 +24,8 @@ Fix: remove it (`derive_away`). If R16 applies, it is a snapshot instead.
 - no hint that they mean different things
 
 Fix: merge into the more-referenced model, dedupe on the natural key, record IDs in
-`MigrationIdMap`. Overlap with unclear meaning → ambiguity, no merge.
+`MigrationIdMap`. The losing duplicate of each pair is also a QuarantinedRow (reason
+`duplicate_loser`), exactly as in R13. Overlap with unclear meaning → ambiguity, no merge.
 A pair with ≥70% field overlap that fails the identity test (no shared natural-key values) is
 still an open question, not a clean result: two models that look the same may be one concept
 split by population, or two concepts. Keep both and log an ambiguity naming both models.

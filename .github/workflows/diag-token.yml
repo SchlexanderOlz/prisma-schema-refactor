@@ -1,0 +1,29 @@
+name: diag-token
+on:
+  pull_request:
+    types: [opened, synchronize]
+permissions:
+  contents: read
+jobs:
+  diag:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Token shape (no secret content printed)
+        env:
+          T: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          echo "length: ${#T}"
+          case "$T" in sk-ant-oat01-*) echo "prefix: sk-ant-oat01- OK";; sk-ant-*) echo "prefix: sk-ant- (other kind)";; *) echo "prefix: unexpected";; esac
+          printf %s "$T" | grep -q '[[:space:]]' && echo "contains whitespace/newline: YES" || echo "contains whitespace/newline: no"
+          printf %s "$T" | tr -d '[:space:]' | wc -c | xargs echo "length without whitespace:"
+      - run: npm install -g --no-audit --no-fund @anthropic-ai/claude-code@2.1.296
+      - name: Raw token
+        continue-on-error: true
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: timeout 120 claude -p "Reply with the single word ok" --tools "" --max-turns 1 --output-format text
+      - name: Trimmed token
+        continue-on-error: true
+        env:
+          T: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: CLAUDE_CODE_OAUTH_TOKEN="$(printf %s "$T" | tr -d '[:space:]')" timeout 120 claude -p "Reply with the single word ok" --tools "" --max-turns 1 --output-format text

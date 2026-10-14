@@ -50,6 +50,11 @@ Invoked as `/refactor-prisma-db [--project <dir>] [--out <dir>]`.
    output-contract.md specifies.
 6. **Migration.** Follow migration-playbook.md and produce
    `<out>/migrations/<UTC timestamp>_refactor/migration.sql`.
+6b. **Code impact.** Search the project's source (outside `--project`) for code the change
+   would break: raw SQL (`$queryRaw`, `$executeRaw`, SQL strings) that names a changed table or
+   column, Prisma Client calls on removed, moved or retyped fields, and compound-unique
+   selectors. Change the design when a change would break raw SQL at runtime. Otherwise list
+   every required code change in the final report and in `assumptions`.
 7. **Self-check** on the scratch DB. Loop until clean, max 3 iterations, then report what is left.
    - `node <skill-dir>/scripts/check-output.mjs --project <project> --out <out>`
    - `npx prisma validate` on `<out>/schema.prisma`

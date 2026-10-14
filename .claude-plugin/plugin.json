@@ -1,0 +1,10 @@
+{
+  "name": "refactor-prisma-db",
+  "displayName": "Refactor Prisma DB",
+  "description": "Designs a normalized target for an existing Prisma + PostgreSQL schema and produces schema.prisma, mapping.yaml, decisions.yaml and a data-preserving migration. Never applies anything to a real database.",
+  "author": { "name": "SchlexanderOlz" },
+  "homepage": "https://github.com/SchlexanderOlz/prisma-schema-refactor",
+  "repository": "https://github.com/SchlexanderOlz/prisma-schema-refactor",
+  "license": "MIT",
+  "keywords": ["prisma", "postgresql", "schema", "normalization", "migration"]
+}

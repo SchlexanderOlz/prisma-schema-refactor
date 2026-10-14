@@ -2,9 +2,20 @@
 
 Each rule: what violates it → evidence to require → fix. Never apply a fix without the evidence.
 
+Percentages need volume. A rate threshold (R2, R4, R8, R10, R17) is evidence only when it is
+measured on at least 10 non-null rows; on fewer rows agreement is coincidence. Below that, keep
+the element, and log an ambiguity only if the schema shape alone is strongly suspicious.
+
 **R1 Primary key.** Every model has a single-column surrogate PK. Keep the existing PK type
 (never switch Int↔UUID). A non-join model with a composite natural PK → add a surrogate `id`
-and keep the old key as `@@unique`.
+and keep the old key as `@@unique`, but only when other models reference its rows or need to.
+A table nobody references (counters, sequences, per-period balances) keeps its composite key.
+A model without any primary key gets one.
+
+**New columns on existing tables.** A required column added to a table that already has rows
+or other writers needs a database-level default: `autoincrement()`, `now()`, a literal, or
+`dbgenerated("gen_random_uuid()::text")`. `cuid()`, `uuid()` and `nanoid()` exist only in Prisma
+Client; raw SQL, triggers and other services that insert rows never get them.
 
 **R2 Atomic values (1NF).** Delimited lists or arrays of references in scalar columns.
 Evidence: ≥20% of non-null values contain `,` `;` or `|`, and the tokens look like ids or codes.
@@ -42,6 +53,9 @@ owned children. Orphan rows → QuarantinedRow (reason `orphan_fk`).
 
 **R8 No redundant relation paths.** An FK duplicating a path reachable through another FK, agreeing
 in ≥95% of rows → remove (`derive_away`). Disagreeing rows → ambiguity, keep.
+Keep it anyway, and record why in `assumptions`, when it is a scoping (tenant/owner) key, i.e.
+the same FK to the same model on a large share of models (profile `scopingColumns`): such keys
+are deliberate access paths for filtering and isolation, not redundancy.
 
 **R9 Join models.** A join model where each A has at most one B is a 1:n in disguise → put the FK on
 the child. m:n with payload → an explicit model.
@@ -99,7 +113,15 @@ cached totals) → remove (`derive_away` with `derivable_from`). On historical d
 responses, settings blobs.
 
 **R19 Possibly unused.** A model with no relations and no evidence of use → never drop; log an
-ambiguity.
+ambiguity. Look for evidence first: search the project's source for the model (e.g.
+`prisma.<modelName>`, its name in queries, framework adapters such as auth libraries). A model
+the code uses is clean, with no ambiguity.
+
+**Database objects outside the schema.** Row-level security policies, triggers, views and
+functions are invisible in `schema.prisma` (profile `databaseObjects`). Never remove, rename,
+retype or move a column such an object references, and never drop or merge away its table;
+rules that would do so do not apply to it. Keep it and note the dependency in `assumptions`.
+Also check that every statement of the migration leaves those objects valid.
 
 ## Ambiguity
 Log an ambiguity and use the safe default whenever:

@@ -162,6 +162,22 @@ if (mapping && tgt) {
   }
 }
 
+// --- new required columns on existing tables need a database-level default
+const CLIENT_ONLY = /^(cuid|uuid|nanoid|ulid)\(/
+if (mapping && tgt) {
+  const targetsOfExisting = new Set(mapping.models.filter((m) => m.action === 'keep' || m.action === 'rename').map((m) => m.target))
+  for (const name of targetsOfExisting) {
+    const tm = tgt.models.get(name)
+    const sm = src.models.get(mapping.models.find((m) => m.target === name && (m.action === 'keep' || m.action === 'rename')).source)
+    if (!tm || !sm) continue
+    const before = new Set(scalars(sm).map((f) => f.column))
+    for (const f of scalars(tm)) {
+      if (before.has(f.column) || f.optional || f.list) continue
+      if (f.default && CLIENT_ONLY.test(f.default)) P(`${name}.${f.name}: new required column on an existing table with a client-side default @default(${f.default}); raw SQL and other writers get no value. Use a database default (e.g. dbgenerated("gen_random_uuid()::text")).`)
+    }
+  }
+}
+
 // --- snapshots documented on the field
 if (decisions && tgt && mapping) {
   const fieldTarget = (ref) => {

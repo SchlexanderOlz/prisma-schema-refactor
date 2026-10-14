@@ -1,0 +1,12 @@
+{
+  "name": "prisma-schema-refactor",
+  "description": "The refactor-prisma-db skill for Claude Code",
+  "owner": { "name": "SchlexanderOlz" },
+  "plugins": [
+    {
+      "name": "refactor-prisma-db",
+      "source": "./",
+      "description": "Normalize an existing Prisma + PostgreSQL schema with a data-preserving migration"
+    }
+  ]
+}

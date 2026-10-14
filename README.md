@@ -18,6 +18,7 @@ It never touches a real database and never edits the project.
 | Path | What |
 |---|---|
 | `skills/refactor-prisma-db/` | The skill: `SKILL.md`, rules, output contract, migration playbook, profiling and contract-check scripts |
+| `.claude-plugin/` | Plugin manifest and marketplace file, so Claude Code can install the skill by name |
 | `fixtures/generator/` | Deterministic generator (fixed seed) for every fixture below |
 | `fixtures/clean/` | A fictional company platform: 122 models in 14 domains, correct by design |
 | `fixtures/messy/` | The clean DB with 32 planted mess transforms (29 models touched). **This is the skill's input.** |
@@ -81,15 +82,32 @@ npm run fixtures     # byte-identical on every run; the self-test fails if the c
 
 ## Install the skill
 
+One command, as a Claude Code plugin (Claude Code 2.1.292 or newer):
+
 ```bash
-./install.sh         # symlinks skills/* into ~/.claude/skills/ (idempotent, never overwrites a real dir)
+claude plugin install refactor-prisma-db --marketplace SchlexanderOlz/prisma-schema-refactor
 ```
+
+Inside a session the same works as
+`/plugin install refactor-prisma-db --marketplace SchlexanderOlz/prisma-schema-refactor`.
+This repo is its own plugin marketplace (`.claude-plugin/marketplace.json`). Update later with
+`claude plugin update refactor-prisma-db@prisma-schema-refactor`.
+
+Without the plugin system, clone and symlink the skill into `~/.claude/skills/`:
+
+```bash
+git clone --depth 1 https://github.com/SchlexanderOlz/prisma-schema-refactor.git ~/.local/share/prisma-schema-refactor && ~/.local/share/prisma-schema-refactor/install.sh
+```
+
+Update with `git -C ~/.local/share/prisma-schema-refactor pull`. From a checkout,
+`./install.sh` does the same symlinking (idempotent, never overwrites a real dir).
 
 Then, in a project with a `prisma/` directory and a disposable copy of its database:
 
 ```bash
 SCRATCH_DATABASE_URL=postgresql://localhost:5432/myapp_copy claude
-> /refactor-prisma-db
+> /refactor-prisma-db:refactor-prisma-db    # plugin install
+> /refactor-prisma-db                       # install.sh
 ```
 
 ## How it is scored

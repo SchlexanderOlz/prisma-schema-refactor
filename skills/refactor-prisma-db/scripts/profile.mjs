@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-// Read-only data profile of the scratch database, as evidence for the rules in reference/rules.md.
+// Profile of the source schema, as evidence for the rules in reference/rules.md.
 // Usage: node profile.mjs --schema <project>/schema.prisma --out <file.json>
-// Connects ONLY to $SCRATCH_DATABASE_URL, in a read-only transaction with a statement timeout.
+// Schema-only by default. Adds data statistics only when $SCRATCH_DATABASE_URL is already set to a
+// local database other than $DATABASE_URL; then it reads in a read-only transaction with a
+// statement timeout. It never asks for a database and never connects to anything else.
 
-import { mkdirSync, writeFileSync } from 'node:fs'
-import { dirname } from 'node:path'
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import pg from 'pg'
 import { field, forwardRelations, pk, q, readSchema, scalars } from './schema.mjs'
 
@@ -19,17 +21,30 @@ if (!schemaPath || !outPath) {
   console.error('usage: profile.mjs --schema <schema.prisma> --out <profile.json>')
   process.exit(2)
 }
-const url = process.env.SCRATCH_DATABASE_URL
-if (!url) {
-  console.error('SCRATCH_DATABASE_URL is not set. Refusing to connect to anything else.')
-  process.exit(2)
+function scratchUrl() {
+  const url = process.env.SCRATCH_DATABASE_URL
+  if (!url) return { why: 'SCRATCH_DATABASE_URL is not set' }
+  if (url === process.env.DATABASE_URL) return { why: 'SCRATCH_DATABASE_URL equals DATABASE_URL' }
+  let host
+  try {
+    host = new URL(url).hostname
+  } catch {
+    return { why: 'SCRATCH_DATABASE_URL is not a valid URL' }
+  }
+  if (!['localhost', '127.0.0.1', '[::1]', '::1'].includes(host)) return { why: `SCRATCH_DATABASE_URL host ${host} is not local` }
+  return { url }
 }
 
 const { models, enums } = readSchema(schemaPath)
-const client = new pg.Client({ connectionString: url, statement_timeout: 30000 })
-await client.connect()
-await client.query('SET default_transaction_read_only = on')
-await client.query('BEGIN READ ONLY')
+const scratch = scratchUrl()
+let client = null
+if (scratch.url) {
+  client = new pg.Client({ connectionString: scratch.url, statement_timeout: 30000 })
+  await client.connect()
+  await client.query('SET default_transaction_read_only = on')
+  await client.query('BEGIN READ ONLY')
+}
+const DATA = client !== null
 
 const one = async (sql) => {
   const r = await client.query(sql)
@@ -64,11 +79,11 @@ for (const m of models.values()) {
   }
 }
 
-const profile = { generatedFor: schemaPath, models: {}, schemaFindings: {}, relationEvidence: { transitiveCopies: [], pathAgreement: [], derivedAggregates: [], joinCardinality: [] } }
+const profile = { generatedFor: schemaPath, mode: DATA ? 'schema+data' : `schema-only (${scratch.why})`, models: {}, schemaFindings: {}, relationEvidence: { transitiveCopies: [], pathAgreement: [], derivedAggregates: [], joinCardinality: [] } }
 
 for (const m of models.values()) {
   const T = q(m.table)
-  const rows = num((await one(`SELECT count(*) AS n FROM ${T}`)).n)
+  const rows = DATA ? num((await one(`SELECT count(*) AS n FROM ${T}`)).n) : null
   const pkCols = pk(m)
   const fkCols = relationFkColumns(m)
   const mp = { table: m.table, rows, primaryKey: pkCols, relations: forwardRelations(m).map((r) => ({ field: r.name, to: r.type, fields: r.relation.fields, onDelete: r.relation.onDelete ?? null })), referencedBy: referencedBy.get(m.name) ?? [], fields: {}, idLikeWithoutRelation: [], candidateKeys: [] }
@@ -77,72 +92,77 @@ for (const m of models.values()) {
     // List columns (String[], Int[] …) get element statistics instead of the scalar analyses.
     const isText = f.type === 'String' && !f.list
     const isJson = f.type === 'Json' && !f.list
-    const base = await one(
+    if (!DATA) {
+      mp.fields[f.name] = { type: f.type + (f.list ? '[]' : f.optional ? '?' : ''), native: f.native ?? null, enum: enums.has(f.type) ? enums.get(f.type) : undefined }
+    }
+    const base = !DATA ? null : await one(
       `SELECT count(*) FILTER (WHERE ${C} IS NULL) AS nulls, count(DISTINCT ${isJson ? `${C}::text` : C}) AS distinct${isText ? `, max(length(${C})) AS maxlen` : ''} FROM ${T}`,
     )
-    const nonNull = rows - num(base.nulls)
-    const fp = {
-      type: f.type + (f.list ? '[]' : f.optional ? '?' : ''),
-      native: f.native ?? null,
-      enum: enums.has(f.type) ? enums.get(f.type) : undefined,
-      nullRate: rows ? r3(num(base.nulls) / rows) : null,
-      distinct: num(base.distinct),
-      maxLength: isText ? num(base.maxlen) : undefined,
-      samples: (await client.query(`SELECT DISTINCT ${C}::text AS v FROM ${T} WHERE ${C} IS NOT NULL ORDER BY 1 LIMIT ${SAMPLES}`)).rows.map((r) => (r.v.length > 60 ? r.v.slice(0, 57) + '...' : r.v)),
-    }
-    if (isText && nonNull) {
-      const p = await one(`SELECT
-          count(*) FILTER (WHERE ${C} ~ '^\\s*[-+]?\\d+\\s*$') AS int,
-          count(*) FILTER (WHERE ${C} ~ '^\\s*[-+]?\\d+([.,]\\d+)?\\s*$') AS dec,
-          count(*) FILTER (WHERE ${C} ~ '^\\d{4}-\\d{2}-\\d{2}([T ]\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:?\\d{2})?)?$') AS iso,
-          count(*) FILTER (WHERE ${C} ~ '^\\d{1,2}[./-]\\d{1,2}[./-]\\d{2,4}$') AS otherdate,
-          count(*) FILTER (WHERE lower(btrim(${C})) = ANY($1)) AS bool,
-          count(*) FILTER (WHERE ${C} ~ '^\\s*[-+]?\\d+([.,]\\d+)?\\s*[A-Za-z]+\\s*$') AS withunit,
-          count(*) FILTER (WHERE ${C} ~ '[,;|]') AS delimited,
-          count(*) FILTER (WHERE ${C} <> btrim(${C})) AS untrimmed,
-          count(DISTINCT upper(btrim(${C}))) AS normdistinct
-        FROM ${T} WHERE ${C} IS NOT NULL`.replace('$1', `ARRAY[${BOOL_WORDS.map((w) => `'${w}'`).join(',')}]`))
-      const parse = {
-        int: rate(p.int, nonNull), decimal: rate(p.dec, nonNull), isoDate: rate(p.iso, nonNull), otherDate: rate(p.otherdate, nonNull),
-        booleanWords: rate(p.bool, nonNull), numberWithUnit: rate(p.withunit, nonNull),
+    if (DATA) {
+      const nonNull = rows - num(base.nulls)
+      const fp = {
+        type: f.type + (f.list ? '[]' : f.optional ? '?' : ''),
+        native: f.native ?? null,
+        enum: enums.has(f.type) ? enums.get(f.type) : undefined,
+        nullRate: rows ? r3(num(base.nulls) / rows) : null,
+        distinct: num(base.distinct),
+        maxLength: isText ? num(base.maxlen) : undefined,
+        samples: (await client.query(`SELECT DISTINCT ${C}::text AS v FROM ${T} WHERE ${C} IS NOT NULL ORDER BY 1 LIMIT ${SAMPLES}`)).rows.map((r) => (r.v.length > 60 ? r.v.slice(0, 57) + '...' : r.v)),
       }
-      for (const k of Object.keys(parse)) if (!parse[k]) delete parse[k]
-      if (Object.keys(parse).length) fp.parse = parse
-      if (num(p.untrimmed)) fp.untrimmedRate = rate(p.untrimmed, nonNull)
-      if (num(p.normdistinct) !== num(base.distinct)) fp.distinctCaseInsensitiveTrimmed = num(p.normdistinct)
-      if (num(p.delimited)) {
-        const toks = (await client.query(`SELECT btrim(t) AS t FROM ${T} x CROSS JOIN LATERAL regexp_split_to_table(x.${C}, '[,;|]') t WHERE x.${C} ~ '[,;|]' AND btrim(t) <> '' LIMIT 500`)).rows.map((r) => r.t)
-        fp.delimitedList = {
-          rate: rate(p.delimited, nonNull),
-          tokens: toks.length,
-          numericTokenShare: toks.length ? r3(toks.filter((t) => /^\d+$/.test(t)).length / toks.length) : null,
-          codeLikeTokenShare: toks.length ? r3(toks.filter((t) => /^[A-Za-z0-9_-]{1,40}$/.test(t)).length / toks.length) : null,
-          sampleTokens: [...new Set(toks)].slice(0, 8),
+      if (isText && nonNull) {
+        const p = await one(`SELECT
+            count(*) FILTER (WHERE ${C} ~ '^\\s*[-+]?\\d+\\s*$') AS int,
+            count(*) FILTER (WHERE ${C} ~ '^\\s*[-+]?\\d+([.,]\\d+)?\\s*$') AS dec,
+            count(*) FILTER (WHERE ${C} ~ '^\\d{4}-\\d{2}-\\d{2}([T ]\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:?\\d{2})?)?$') AS iso,
+            count(*) FILTER (WHERE ${C} ~ '^\\d{1,2}[./-]\\d{1,2}[./-]\\d{2,4}$') AS otherdate,
+            count(*) FILTER (WHERE lower(btrim(${C})) = ANY($1)) AS bool,
+            count(*) FILTER (WHERE ${C} ~ '^\\s*[-+]?\\d+([.,]\\d+)?\\s*[A-Za-z]+\\s*$') AS withunit,
+            count(*) FILTER (WHERE ${C} ~ '[,;|]') AS delimited,
+            count(*) FILTER (WHERE ${C} <> btrim(${C})) AS untrimmed,
+            count(DISTINCT upper(btrim(${C}))) AS normdistinct
+          FROM ${T} WHERE ${C} IS NOT NULL`.replace('$1', `ARRAY[${BOOL_WORDS.map((w) => `'${w}'`).join(',')}]`))
+        const parse = {
+          int: rate(p.int, nonNull), decimal: rate(p.dec, nonNull), isoDate: rate(p.iso, nonNull), otherDate: rate(p.otherdate, nonNull),
+          booleanWords: rate(p.bool, nonNull), numberWithUnit: rate(p.withunit, nonNull),
+        }
+        for (const k of Object.keys(parse)) if (!parse[k]) delete parse[k]
+        if (Object.keys(parse).length) fp.parse = parse
+        if (num(p.untrimmed)) fp.untrimmedRate = rate(p.untrimmed, nonNull)
+        if (num(p.normdistinct) !== num(base.distinct)) fp.distinctCaseInsensitiveTrimmed = num(p.normdistinct)
+        if (num(p.delimited)) {
+          const toks = (await client.query(`SELECT btrim(t) AS t FROM ${T} x CROSS JOIN LATERAL regexp_split_to_table(x.${C}, '[,;|]') t WHERE x.${C} ~ '[,;|]' AND btrim(t) <> '' LIMIT 500`)).rows.map((r) => r.t)
+          fp.delimitedList = {
+            rate: rate(p.delimited, nonNull),
+            tokens: toks.length,
+            numericTokenShare: toks.length ? r3(toks.filter((t) => /^\d+$/.test(t)).length / toks.length) : null,
+            codeLikeTokenShare: toks.length ? r3(toks.filter((t) => /^[A-Za-z0-9_-]{1,40}$/.test(t)).length / toks.length) : null,
+            sampleTokens: [...new Set(toks)].slice(0, 8),
+          }
+        }
+        if (num(base.distinct) <= 20) {
+          fp.values = (await client.query(`SELECT ${C} AS v, count(*)::int AS n FROM ${T} WHERE ${C} IS NOT NULL GROUP BY 1 ORDER BY 2 DESC, 1`)).rows.map((r) => [r.v, r.n])
         }
       }
-      if (num(base.distinct) <= 20) {
-        fp.values = (await client.query(`SELECT ${C} AS v, count(*)::int AS n FROM ${T} WHERE ${C} IS NOT NULL GROUP BY 1 ORDER BY 2 DESC, 1`)).rows.map((r) => [r.v, r.n])
+      if (isJson && nonNull) {
+        const kinds = (await client.query(`SELECT jsonb_typeof(${C}) AS k, count(*)::int AS n FROM ${T} WHERE ${C} IS NOT NULL GROUP BY 1 ORDER BY 1`)).rows
+        const elemKeys = (await client.query(`SELECT k, count(*)::int AS n FROM ${T} x CROSS JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(x.${C}) = 'array' THEN x.${C} ELSE '[]'::jsonb END) e CROSS JOIN LATERAL jsonb_object_keys(CASE WHEN jsonb_typeof(e) = 'object' THEN e ELSE '{}'::jsonb END) k GROUP BY 1 ORDER BY 2 DESC, 1 LIMIT 30`)).rows
+        const objKeys = (await client.query(`SELECT k, count(*)::int AS n FROM ${T} x CROSS JOIN LATERAL jsonb_object_keys(CASE WHEN jsonb_typeof(x.${C}) = 'object' THEN x.${C} ELSE '{}'::jsonb END) k GROUP BY 1 ORDER BY 2 DESC, 1 LIMIT 30`)).rows
+        const elems = await one(`SELECT coalesce(sum(jsonb_array_length(${C})), 0) AS n FROM ${T} WHERE jsonb_typeof(${C}) = 'array'`)
+        fp.json = { kinds: Object.fromEntries(kinds.map((r) => [r.k, r.n])), arrayElements: num(elems.n), arrayElementKeys: Object.fromEntries(elemKeys.map((r) => [r.k, r.n])), objectKeys: Object.fromEntries(objKeys.map((r) => [r.k, r.n])) }
       }
+      if (f.list && nonNull) {
+        const l = await one(`SELECT coalesce(sum(cardinality(${C})), 0) AS elems, coalesce(max(cardinality(${C})), 0) AS maxlen, count(*) FILTER (WHERE cardinality(${C}) = 0) AS empty FROM ${T} WHERE ${C} IS NOT NULL`)
+        fp.list = { elements: num(l.elems), maxPerRow: num(l.maxlen), emptyArrays: num(l.empty) }
+      }
+      mp.fields[f.name] = fp
     }
-    if (isJson && nonNull) {
-      const kinds = (await client.query(`SELECT jsonb_typeof(${C}) AS k, count(*)::int AS n FROM ${T} WHERE ${C} IS NOT NULL GROUP BY 1 ORDER BY 1`)).rows
-      const elemKeys = (await client.query(`SELECT k, count(*)::int AS n FROM ${T} x CROSS JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(x.${C}) = 'array' THEN x.${C} ELSE '[]'::jsonb END) e CROSS JOIN LATERAL jsonb_object_keys(CASE WHEN jsonb_typeof(e) = 'object' THEN e ELSE '{}'::jsonb END) k GROUP BY 1 ORDER BY 2 DESC, 1 LIMIT 30`)).rows
-      const objKeys = (await client.query(`SELECT k, count(*)::int AS n FROM ${T} x CROSS JOIN LATERAL jsonb_object_keys(CASE WHEN jsonb_typeof(x.${C}) = 'object' THEN x.${C} ELSE '{}'::jsonb END) k GROUP BY 1 ORDER BY 2 DESC, 1 LIMIT 30`)).rows
-      const elems = await one(`SELECT coalesce(sum(jsonb_array_length(${C})), 0) AS n FROM ${T} WHERE jsonb_typeof(${C}) = 'array'`)
-      fp.json = { kinds: Object.fromEntries(kinds.map((r) => [r.k, r.n])), arrayElements: num(elems.n), arrayElementKeys: Object.fromEntries(elemKeys.map((r) => [r.k, r.n])), objectKeys: Object.fromEntries(objKeys.map((r) => [r.k, r.n])) }
-    }
-    if (f.list && nonNull) {
-      const l = await one(`SELECT coalesce(sum(cardinality(${C})), 0) AS elems, coalesce(max(cardinality(${C})), 0) AS maxlen, count(*) FILTER (WHERE cardinality(${C}) = 0) AS empty FROM ${T} WHERE ${C} IS NOT NULL`)
-      fp.list = { elements: num(l.elems), maxPerRow: num(l.maxlen), emptyArrays: num(l.empty) }
-    }
-    mp.fields[f.name] = fp
 
     // array of ids without a relation (R2)
     const idl = f.list && f.name.match(/^(.+?)(Ids|_ids|IDs)$/)
     if (idl && !fkCols.has(f.name)) {
       const target = findTargetModel(idl[1])
       const entry = { field: f.name, guessedTarget: target?.name ?? null }
-      if (target && pk(target).length === 1) {
+      if (DATA && target && pk(target).length === 1) {
         const tpk = q(field(target, pk(target)[0]).column)
         const o = await one(`SELECT count(*) AS n, count(*) FILTER (WHERE NOT EXISTS (SELECT 1 FROM ${q(target.table)} t WHERE t.${tpk}::text = e::text)) AS dangling FROM ${T} x CROSS JOIN LATERAL unnest(x.${C}) e`)
         entry.elements = num(o.n)
@@ -157,7 +177,7 @@ for (const m of models.values()) {
     if (idm && !f.id && !fkCols.has(f.name) && !pkCols.includes(f.name)) {
       const target = findTargetModel(idm[1])
       const entry = { field: f.name, guessedTarget: target?.name ?? null }
-      if (target && pk(target).length === 1) {
+      if (DATA && target && pk(target).length === 1) {
         const tpk = q(field(target, pk(target)[0]).column)
         const o = await one(`SELECT count(*) FILTER (WHERE x.${C} IS NOT NULL) AS nn, count(*) FILTER (WHERE x.${C} IS NOT NULL AND NOT EXISTS (SELECT 1 FROM ${q(target.table)} t WHERE t.${tpk}::text = x.${C}::text)) AS orphans FROM ${T} x`)
         entry.nonNull = num(o.nn)
@@ -169,6 +189,10 @@ for (const m of models.values()) {
 
     // candidate natural keys (R13)
     if ((f.unique || KEY_LIKE.test(f.name)) && !f.id && !f.list && (isText || f.type === 'Int') && !fkCols.has(f.name)) {
+      if (!DATA) {
+        mp.candidateKeys.push({ field: f.name, declaredUnique: f.unique })
+        continue
+      }
       // Hash of all non-PK columns; to_jsonb avoids the 100-argument limit of concat_ws on wide tables.
       const pkPhys = pkCols.map((n) => field(m, n).column)
       const rowExpr = `md5((to_jsonb(x) - ARRAY[${pkPhys.map((c) => `'${c.replace(/'/g, "''")}'`).join(', ')}]::text[])::text)`
@@ -186,7 +210,7 @@ for (const m of models.values()) {
 const singleFkRelations = (m) => forwardRelations(m).filter((r) => r.relation.fields.length === 1 && pk(models.get(r.type)).length === 1)
 const comparable = (a, b) => a.type === b.type && !a.list && !b.list && !a.isRelation && !b.isRelation && !['Json', 'Boolean', 'Bytes'].includes(a.type)
 
-for (const m of models.values()) {
+for (const m of DATA ? models.values() : []) {
   const fkCols = relationFkColumns(m)
   for (const r of singleFkRelations(m)) {
     const t = models.get(r.type)
@@ -237,7 +261,7 @@ for (const m of models.values()) {
   }
 }
 // R17: numeric fields equal to an aggregate over children
-for (const t of models.values()) {
+for (const t of DATA ? models.values() : []) {
   if (pk(t).length !== 1) continue
   const tpk = field(t, pk(t)[0]).column
   const numeric = scalars(t).filter((f) => !f.id && !f.list && ['Int', 'Decimal', 'Float'].includes(f.type) && !relationFkColumns(t).has(f.name))
@@ -282,6 +306,10 @@ for (let i = 0; i < all.length; i++) {
       const fa = field(A, name)
       const fb = field(B, name)
       if (!(fa.unique || fb.unique || KEY_LIKE.test(name))) continue
+      if (!DATA) {
+        keys.push({ field: name, sharedValues: null })
+        continue
+      }
       const row = await one(`SELECT count(*) AS n FROM (SELECT ${q(fa.column)}::text FROM ${q(A.table)} WHERE ${q(fa.column)} IS NOT NULL INTERSECT SELECT ${q(fb.column)}::text FROM ${q(B.table)} WHERE ${q(fb.column)} IS NOT NULL) s`)
       keys.push({ field: name, sharedValues: num(row.n) })
     }
@@ -303,11 +331,40 @@ function referencedFields(def, ownTable) {
   for (const t of new Set(tables)) for (const f of scalars(byTable.get(t))) if (idents.has(f.column) || words.has(f.column)) out.add(`${byTable.get(t).name}.${f.name}`)
   return [...out].sort()
 }
-const dbo = { rlsEnabled: [], policies: [], triggers: [], views: [] }
+const dbo = { source: DATA ? 'database' : 'migrations', rlsEnabled: [], policies: [], triggers: [], views: [] }
+if (DATA) {
 for (const r of (await client.query(`SELECT c.relname AS t FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = 'public' AND c.relrowsecurity ORDER BY 1`)).rows) dbo.rlsEnabled.push(byTable.get(r.t)?.name ?? r.t)
 for (const r of (await client.query(`SELECT tablename AS t, policyname AS name, coalesce(qual, '') || ' ' || coalesce(with_check, '') AS def FROM pg_policies WHERE schemaname = 'public' ORDER BY 1, 2`)).rows) dbo.policies.push({ model: byTable.get(r.t)?.name ?? r.t, name: r.name, references: referencedFields(r.def, r.t) })
 for (const r of (await client.query(`SELECT c.relname AS t, tg.tgname AS name, pg_get_triggerdef(tg.oid) || ' ' || coalesce(p.prosrc, '') AS def FROM pg_trigger tg JOIN pg_class c ON c.oid = tg.tgrelid JOIN pg_namespace n ON n.oid = c.relnamespace LEFT JOIN pg_proc p ON p.oid = tg.tgfoid WHERE NOT tg.tgisinternal AND n.nspname = 'public' ORDER BY 1, 2`)).rows) dbo.triggers.push({ model: byTable.get(r.t)?.name ?? r.t, name: r.name, references: referencedFields(r.def, r.t) })
 for (const r of (await client.query(`SELECT viewname AS name, definition AS def FROM pg_views WHERE schemaname = 'public' ORDER BY 1`)).rows) dbo.views.push({ name: r.name, references: referencedFields(r.def, null) })
+} else {
+  // Without a database, read the same objects from the raw SQL in the migrations, in order,
+  // so a later DROP removes an earlier CREATE. Trigger function bodies are not followed.
+  const dir = join(dirname(schemaPath), 'migrations')
+  const files = existsSync(dir) ? readdirSync(dir).sort().map((d) => join(dir, d, 'migration.sql')).filter(existsSync) : []
+  const id = `"?([A-Za-z0-9_]+)"?`
+  const tbl = `(?:${id}\\.)?${id}`
+  const rls = new Set()
+  const pol = new Map()
+  const trg = new Map()
+  const vw = new Map()
+  for (const file of files) {
+    for (const st of readFileSync(file, 'utf8').replace(/--[^\n]*/g, '').split(';')) {
+      let x
+      if ((x = st.match(new RegExp(`ALTER\\s+TABLE\\s+(?:ONLY\\s+)?${tbl}\\s+(ENABLE|DISABLE)\\s+ROW\\s+LEVEL\\s+SECURITY`, 'i')))) x[3].toUpperCase() === 'ENABLE' ? rls.add(x[2]) : rls.delete(x[2])
+      else if ((x = st.match(new RegExp(`CREATE\\s+POLICY\\s+${id}\\s+ON\\s+${tbl}`, 'i')))) pol.set(`${x[3]}.${x[1]}`, { model: byTable.get(x[3])?.name ?? x[3], name: x[1], references: referencedFields(st, x[3]) })
+      else if ((x = st.match(new RegExp(`DROP\\s+POLICY\\s+(?:IF\\s+EXISTS\\s+)?${id}\\s+ON\\s+${tbl}`, 'i')))) pol.delete(`${x[3]}.${x[1]}`)
+      else if ((x = st.match(new RegExp(`CREATE\\s+(?:OR\\s+REPLACE\\s+)?(?:CONSTRAINT\\s+)?TRIGGER\\s+${id}[\\s\\S]*?\\sON\\s+${tbl}`, 'i')))) trg.set(`${x[3]}.${x[1]}`, { model: byTable.get(x[3])?.name ?? x[3], name: x[1], references: referencedFields(st, x[3]) })
+      else if ((x = st.match(new RegExp(`DROP\\s+TRIGGER\\s+(?:IF\\s+EXISTS\\s+)?${id}\\s+ON\\s+${tbl}`, 'i')))) trg.delete(`${x[3]}.${x[1]}`)
+      else if ((x = st.match(new RegExp(`CREATE\\s+(?:OR\\s+REPLACE\\s+)?(?:MATERIALIZED\\s+)?VIEW\\s+${tbl}`, 'i')))) vw.set(x[2], { name: x[2], references: referencedFields(st, null) })
+      else if ((x = st.match(new RegExp(`DROP\\s+(?:MATERIALIZED\\s+)?VIEW\\s+(?:IF\\s+EXISTS\\s+)?${tbl}`, 'i')))) vw.delete(x[2])
+    }
+  }
+  dbo.rlsEnabled = [...rls].sort().map((t) => byTable.get(t)?.name ?? t)
+  dbo.policies = [...pol.values()]
+  dbo.triggers = [...trg.values()]
+  dbo.views = [...vw.values()]
+}
 profile.databaseObjects = dbo
 
 // ---------------------------------------------------------------------------
@@ -369,6 +426,8 @@ for (const [mn, mp] of Object.entries(profile.models)) {
     if (fp.parse?.numberWithUnit && fp.parse.numberWithUnit < 1) H.push(`mixed numbers/units: ${ref} (${fp.parse.numberWithUnit} with unit)`)
     if (fp.json?.arrayElements) H.push(`json arrays: ${ref} ${fp.json.arrayElements} elements, element keys ${Object.keys(fp.json.arrayElementKeys).join(',')}`)
   }
+  if (!DATA) for (const x of mp.idLikeWithoutRelation) if (x.guessedTarget) H.push(`id-like without @relation (no data to check): ${mn}.${x.field} -> ${x.guessedTarget}`)
+  if (!DATA) for (const x of mp.idArraysWithoutRelation ?? []) if (x.guessedTarget) H.push(`array of ids without a relation (no data to check): ${mn}.${x.field} -> ${x.guessedTarget}`)
   for (const x of mp.idLikeWithoutRelation) if (x.guessedTarget && x.matchRate >= 0.5) H.push(`id-like without @relation: ${mn}.${x.field} -> ${x.guessedTarget}, match ${x.matchRate}, orphans ${x.orphans}`)
   for (const x of mp.idArraysWithoutRelation ?? []) if (x.guessedTarget && x.matchRate >= 0.5) H.push(`array of ids without a relation: ${mn}.${x.field} -> ${x.guessedTarget}, ${x.elements} elements, match ${x.matchRate}, dangling ${x.dangling}`)
   for (const k of mp.candidateKeys) {
@@ -380,7 +439,7 @@ for (const c of profile.relationEvidence.transitiveCopies) H.push(`copy of relat
 for (const pa of profile.relationEvidence.pathAgreement) if (pa.agreeRate !== null && pa.agreeRate >= 0.95) H.push(`redundant path: ${pa.model}.${pa.field} agrees with ${pa.viaPath} in ${pa.agreeRate} of ${pa.rows} rows`)
 for (const d of profile.relationEvidence.derivedAggregates) H.push(`aggregate match: ${d.model}.${d.field} = ${d.equals} in ${d.matchRate} of ${d.rows} rows`)
 for (const j of profile.relationEvidence.joinCardinality) if (j.maxAPerB <= 1 || j.maxBPerA <= 1) H.push(`join cardinality: ${j.model} max ${j.maxBPerA} of (${j.b}) per a, max ${j.maxAPerB} of (${j.a}) per b`)
-for (const o of profile.relationEvidence.overlappingModels) H.push(`overlapping models: ${o.a} / ${o.b} share ${o.sharedFields.length} fields (${o.overlapOfSmaller} of the smaller), key overlap ${o.keyOverlap.map((k) => `${k.field}=${k.sharedValues}`).join(', ') || 'none'}`)
+for (const o of profile.relationEvidence.overlappingModels) H.push(`overlapping models: ${o.a} / ${o.b} share ${o.sharedFields.length} fields (${o.overlapOfSmaller} of the smaller), key overlap ${DATA ? o.keyOverlap.map((k) => `${k.field}=${k.sharedValues}`).join(', ') || 'none' : 'unknown (no data)'}`)
 for (const sc of profile.schemaFindings.scopingColumns) H.push(`scoping (tenant) column: ${sc.column} on ${sc.models} models (${sc.share} of all)`)
 for (const m of profile.schemaFindings.modelsWithoutRelations) H.push(`no relations: ${m}`)
 {
@@ -395,14 +454,17 @@ for (const o of profile.schemaFindings.requiredUniqueFk) H.push(`required unique
 for (const f of profile.schemaFindings.fkWithoutIndex) H.push(`FK without index: ${f}`)
 for (const n of profile.schemaFindings.numberedFieldFamilies) H.push(`numbered field family: ${n.model}.${n.fields.join('/')}`)
 for (const n of profile.schemaFindings.namingViolations) H.push(`naming: ${n}`)
+if (!DATA) H.unshift(`schema-only profile (${scratch.why}): no row counts, value statistics or data evidence. Rules that need data evidence cannot fire; keep those elements.`)
 profile.highlights = H
 
-await client.query('ROLLBACK')
-await client.end()
+if (DATA) {
+  await client.query('ROLLBACK')
+  await client.end()
+}
 
 // One field per line keeps the file greppable and readable in chunks.
 function render(p) {
-  const L = ['{', `  "generatedFor": ${JSON.stringify(p.generatedFor)},`, '  "highlights": [']
+  const L = ['{', `  "generatedFor": ${JSON.stringify(p.generatedFor)},`, `  "mode": ${JSON.stringify(p.mode)},`, '  "highlights": [']
   L.push(p.highlights.map((h) => `    ${JSON.stringify(h)}`).join(',\n'), '  ],', '  "models": {')
   const ms = Object.entries(p.models)
   ms.forEach(([mn, mp], i) => {
@@ -422,11 +484,11 @@ function render(p) {
     L.push(v.map((x) => `      ${JSON.stringify(x)}`).join(',\n'))
     L.push(`    ]${i < re.length - 1 ? ',' : ''}`)
   })
-  L.push('  },', `  "schemaFindings": ${JSON.stringify(p.schemaFindings)}`, '}')
+  L.push('  },', `  "databaseObjects": ${JSON.stringify(p.databaseObjects)},`, `  "schemaFindings": ${JSON.stringify(p.schemaFindings)}`, '}')
   return L.join('\n') + '\n'
 }
 mkdirSync(dirname(outPath), { recursive: true })
 writeFileSync(outPath, render(profile))
 JSON.parse(render(profile))
 const nModels = Object.keys(profile.models).length
-console.log(`profile: ${nModels} models, ${profile.highlights.length} highlights -> ${outPath} (start with "highlights")`)
+console.log(`profile (${profile.mode}): ${nModels} models, ${profile.highlights.length} highlights -> ${outPath} (start with "highlights")`)

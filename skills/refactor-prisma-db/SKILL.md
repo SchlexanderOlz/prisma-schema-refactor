@@ -10,11 +10,12 @@ Invoked as `/refactor-prisma-db [--project <dir>] [--out <dir>]`.
 - `--project`: directory with `schema.prisma` and `migrations/`. Default: the single `prisma/`
   directory in the working tree; if there are several, ask.
 - `--out`: output directory. Default: `./refactor-out`.
-- `SCRATCH_DATABASE_URL` (env): a disposable PostgreSQL copy that already holds the current
-  schema and data. It is the ONLY database you may connect to.
-  - Missing → stop and ask.
-  - Equal to the project's `DATABASE_URL`, or host not localhost/127.0.0.1 and the user
-    hasn't confirmed it is a copy → stop and ask.
+- No database is needed. Never ask for one, never set one up, never connect to one yourself.
+  The output is a reviewed design; applying it to a database is the user's own step.
+  - `SCRATCH_DATABASE_URL` (env), only if it is already set: `profile.mjs` then adds read-only
+    data statistics from it. The script decides whether it is safe to use (local host, not
+    `DATABASE_URL`) and falls back to schema-only otherwise. Do not mention a missing
+    `SCRATCH_DATABASE_URL` as a problem.
 
 ## Hard rules
 1. Write only inside `--out`. Never edit the project, its schema, its migrations or anything else.
@@ -37,7 +38,10 @@ Invoked as `/refactor-prisma-db [--project <dir>] [--out <dir>]`.
    `npm --prefix <skill-dir>/scripts ci --silent`.
 2. **Profile.** Run
    `node <skill-dir>/scripts/profile.mjs --schema <project>/schema.prisma --out <out>/.work/profile.json`
-   and read the result.
+   and read the result. Its `mode` says whether data evidence exists. In `schema-only` mode, a
+   rule whose evidence is a data measurement (rates, orphans, duplicates, parse results) cannot
+   fire: keep the element, and log an ambiguity only if the schema shape alone is strongly
+   suspicious. `databaseObjects` then comes from the raw SQL in the migrations.
 3. **Findings.** Write one line per model to `<out>/.work/findings.md`:
    `Model — clean` or `Model — R<n>: <evidence>`. In real schemas most models are clean;
    expect that, and treat a long findings list as a sign you are over-reaching.
@@ -55,14 +59,13 @@ Invoked as `/refactor-prisma-db [--project <dir>] [--out <dir>]`.
    column, Prisma Client calls on removed, moved or retyped fields, and compound-unique
    selectors. Change the design when a change would break raw SQL at runtime. Otherwise list
    every required code change in the final report and in `assumptions`.
-7. **Self-check** on the scratch DB. Loop until clean, max 3 iterations, then report what is left.
+7. **Review.** No database. Loop until clean, max 3 iterations, then report what is left.
    - `node <skill-dir>/scripts/check-output.mjs --project <project> --out <out>`
    - `npx prisma validate` on `<out>/schema.prisma`
-   - Copy the source migrations plus the new one into `<out>/.work/apply/migrations`, deploy
-     them to the scratch DB, then run a drift check (migrations vs `<out>/schema.prisma`
-     must be empty).
-   - Run the reconciliation query from migration-playbook.md.
-
-   The scratch DB is now migrated. Say that it must be re-created before another run.
-8. **Summary.** Print counts: models clean/changed/merged/new, fields moved, rows quarantined,
-   ambiguities, snapshots. Then list every ambiguity as a question for the user.
+   - Re-read `migration.sql` against `mapping.yaml` and migration-playbook.md: every mapping
+     entry has its SQL, every DROP has its `-- mapping:` annotation.
+8. **Summary.** Point to `<out>/schema.prisma` as the result. Print counts: models
+   clean/changed/merged/new, fields moved, rows quarantined (or "unknown, schema-only"),
+   ambiguities, snapshots. State that the migration was not applied anywhere and should be
+   tested on a copy of the database before production. Then list every ambiguity as a
+   question for the user.

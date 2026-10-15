@@ -85,12 +85,18 @@ npm run fixtures     # byte-identical on every run; the self-test fails if the c
 ./install.sh         # symlinks skills/* into ~/.claude/skills/ (idempotent, never overwrites a real dir)
 ```
 
-Then, in a project with a `prisma/` directory and a disposable copy of its database:
+Then, in a project with a `prisma/` directory:
 
 ```bash
-SCRATCH_DATABASE_URL=postgresql://localhost:5432/myapp_copy claude
+claude
 > /refactor-prisma-db
 ```
+
+The skill needs no database and never asks for one. It profiles the schema and migrations,
+writes the reviewed `schema.prisma` plus `mapping.yaml`, `decisions.yaml` and an untested
+`migration.sql` to `refactor-out/`, and stops. Applying and checking the migration against real
+data (gates H2–H7) is the harness's job in CI. If `SCRATCH_DATABASE_URL` happens to point at a
+local copy, the profile adds read-only data statistics from it; the harness runs use this.
 
 ## How it is scored
 
